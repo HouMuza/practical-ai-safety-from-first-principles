@@ -9,8 +9,9 @@ The book treats AI safety as an empirical discipline. Each chapter turns a broad
 Each chapter gets its own folder containing a `README.md` and, where the chapter includes hands-on work, a Jupyter notebook that reproduces it end to end. Chapters that are purely conceptual (no code) say so plainly in their `README.md` rather than including an empty notebook.
 
 ```
-Chapter 1/   AI Safety Overview                    (no code, conceptual chapter)
-Chapter 2/   Turning AI Safety into Data            (notebook: BeaverTails dataset audit)
+Chapter 1/   AI Safety Overview                          (no code, conceptual chapter)
+Chapter 2/   Turning AI Safety into Data                  (notebook: BeaverTails dataset audit)
+Chapter 3/   Building a Safety Classifier from First Principles  (notebook: TF-IDF + logistic regression baseline)
 ```
 
 More chapters will be added here as they are written.
