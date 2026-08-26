@@ -2,14 +2,14 @@
 
 Companion code repository for **Practical AI Safety from First Principles**, a book about technical AI safety taught from the ground up: real datasets, real classifiers, real experiments, and the reasoning behind each one, before reaching for a library that hides the mechanism.
 
-The book treats AI safety as an empirical discipline. Each chapter turns a broad safety concept — hallucination, harmful compliance, reward hacking, jailbreak robustness, distribution shift, unlearning, scalable oversight — into something that can be measured, modelled, and tested. This repository holds the notebooks that go with that work, organized one folder per chapter, so a reader can clone the repo and run the same experiments described in the book.
+The book treats AI safety as an empirical discipline. Each chapter turns a broad safety concept, such as hallucination, harmful compliance, reward hacking, jailbreak robustness, distribution shift, unlearning, or scalable oversight, into something that can be measured, modelled, and tested. This repository holds the notebooks that go with that work, organized one folder per chapter, so a reader can clone the repo and run the same experiments described in the book.
 
 ## Repository structure
 
 Each chapter gets its own folder containing a `README.md` and, where the chapter includes hands-on work, a Jupyter notebook that reproduces it end to end. Chapters that are purely conceptual (no code) say so plainly in their `README.md` rather than including an empty notebook.
 
 ```
-Chapter 1/   AI Safety Overview                    (no code — conceptual chapter)
+Chapter 1/   AI Safety Overview                    (no code, conceptual chapter)
 Chapter 2/   Turning AI Safety into Data            (notebook: BeaverTails dataset audit)
 ```
 
@@ -34,4 +34,4 @@ Then open the notebook inside the chapter folder you're interested in. Each note
 
 ## License
 
-Code in this repository is released under the MIT License (see `LICENSE`). Datasets used by the notebooks retain their own licenses — see each chapter's README for details.
+Code in this repository is released under the MIT License (see `LICENSE`). Datasets used by the notebooks retain their own licenses. See each chapter's README for details.

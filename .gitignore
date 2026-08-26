@@ -5,7 +5,7 @@ __pycache__/
 venv/
 .ipynb_checkpoints/
 
-# Downloaded / generated datasets (do not redistribute — see each chapter's README for licensing)
+# Downloaded / generated datasets (do not redistribute, see each chapter's README for licensing)
 data/
 *.parquet
 
