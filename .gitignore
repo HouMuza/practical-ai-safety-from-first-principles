@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Downloaded / generated datasets (do not redistribute — see each chapter's README for licensing)
+data/
+*.parquet
+
+# OS
+.DS_Store
