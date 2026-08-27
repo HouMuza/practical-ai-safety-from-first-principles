@@ -13,6 +13,7 @@ Chapter 1/   AI Safety Overview                                  (no code, conce
 Chapter 2/   Turning AI Safety into Data                          (notebook: BeaverTails dataset audit)
 Chapter 3/   Building a Safety Classifier from First Principles   (notebook: TF-IDF + logistic regression baseline)
 Chapter 4/   Thresholds, Calibration and the Safety Operating Point  (notebook: threshold selection and calibration)
+Chapter 5/   Distribution Shift and Adversarial Robustness          (notebook: robustness and drift evaluation)
 ```
 
 More chapters will be added here as they are written.
