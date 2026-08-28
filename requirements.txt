@@ -8,3 +8,11 @@ notebook
 joblib
 scipy
 PyYAML
+torch
+transformers>=4.51
+accelerate
+jailbreakbench
+# jailbreakbench imports litellm eagerly even though this repo never uses its LLM wrapper classes;
+# newer litellm releases moved a module jailbreakbench still imports directly, breaking `import jailbreakbench`.
+litellm==1.44.27
+tqdm
