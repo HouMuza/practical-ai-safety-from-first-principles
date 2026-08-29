@@ -9,10 +9,17 @@ joblib
 scipy
 PyYAML
 torch
-transformers>=4.51
+# Capped below 5.0: jailbreakbench (Chapter 6) requires transformers<5.0, and sentence-transformers'
+# latest release (Chapter 7) would otherwise pull in transformers>=5.0 and silently break Chapter 6.
+transformers>=4.51,<5.0
 accelerate
 jailbreakbench
 # jailbreakbench imports litellm eagerly even though this repo never uses its LLM wrapper classes;
 # newer litellm releases moved a module jailbreakbench still imports directly, breaking `import jailbreakbench`.
 litellm==1.44.27
 tqdm
+requests
+# Pinned to a version that still declares/works with transformers<5.0; sentence-transformers>=4.x
+# requires transformers>=5.0, which would reintroduce the Chapter 6 conflict above.
+sentence-transformers==3.3.1
+statsmodels

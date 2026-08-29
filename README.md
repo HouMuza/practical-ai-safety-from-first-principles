@@ -15,6 +15,8 @@ Chapter 3/   Building a Safety Classifier from First Principles   (notebook: TF-
 Chapter 4/   Thresholds, Calibration and the Safety Operating Point  (notebook: threshold selection and calibration)
 Chapter 5/   Distribution Shift and Adversarial Robustness          (notebook: robustness and drift evaluation)
 Chapter 6/   Red Teaming and Jailbreak Evaluation                   (notebook: red-team harness for an open language model)
+Chapter 7/   Truthfulness, Hallucination and Model Uncertainty      (notebook: TruthfulQA, SimpleQA and grounded factuality)
+Chapter 8/   Bias and Fairness as Measurable Safety Properties      (notebook: classical fairness metrics, BBQ and BOLD)
 ```
 
 More chapters will be added here as they are written.
