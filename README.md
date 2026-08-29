@@ -17,6 +17,7 @@ Chapter 5/   Distribution Shift and Adversarial Robustness          (notebook: r
 Chapter 6/   Red Teaming and Jailbreak Evaluation                   (notebook: red-team harness for an open language model)
 Chapter 7/   Truthfulness, Hallucination and Model Uncertainty      (notebook: TruthfulQA, SimpleQA and grounded factuality)
 Chapter 8/   Bias and Fairness as Measurable Safety Properties      (notebook: classical fairness metrics, BBQ and BOLD)
+Chapter 9/   Preference Data and Reward Models                      (notebook: PKU-SafeRLHF, Bradley-Terry reward modelling, RewardBench 2)
 ```
 
 More chapters will be added here as they are written.
