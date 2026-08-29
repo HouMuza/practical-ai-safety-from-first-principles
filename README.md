@@ -18,6 +18,7 @@ Chapter 6/   Red Teaming and Jailbreak Evaluation                   (notebook: r
 Chapter 7/   Truthfulness, Hallucination and Model Uncertainty      (notebook: TruthfulQA, SimpleQA and grounded factuality)
 Chapter 8/   Bias and Fairness as Measurable Safety Properties      (notebook: classical fairness metrics, BBQ and BOLD)
 Chapter 9/   Preference Data and Reward Models                      (notebook: PKU-SafeRLHF, Bradley-Terry reward modelling, RewardBench 2)
+Chapter 11/  Fine-Tuning, Behavioural Spillover and Emergent Misalignment  (notebook: LoRA spillover, backdoor and re-alignment experiments)
 ```
 
 More chapters will be added here as they are written.
