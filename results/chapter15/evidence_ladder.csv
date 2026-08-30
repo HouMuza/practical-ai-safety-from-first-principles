@@ -1,0 +1,7 @@
+method,exact_forgotten,paraphrase_forgotten,membership_indistinguishable
+M_full,True,True,True
+gradient_ascent,True,True,True
+rr_lf1.00_lr0.00,True,True,True
+rr_lf1.00_lr0.25,True,True,True
+rr_lf1.00_lr0.50,True,True,True
+rr_lf1.00_lr1.00,True,True,True

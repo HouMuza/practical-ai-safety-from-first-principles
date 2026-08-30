@@ -1,0 +1,7 @@
+method,forget_exact_acc,forget_paraphrased_acc
+M_full,0.0,0.0
+gradient_ascent,0.0,0.0
+rr_lf1.00_lr0.00,0.0,0.0
+rr_lf1.00_lr0.25,0.0,0.0
+rr_lf1.00_lr0.50,0.0,0.0
+rr_lf1.00_lr1.00,0.0,0.0

@@ -1,0 +1,7 @@
+method,membership_auc
+M_full,0.20750000000000002
+gradient_ascent,0.45875
+rr_lf1.00_lr0.00,0.39250000000000007
+rr_lf1.00_lr0.25,0.48
+rr_lf1.00_lr0.50,0.525
+rr_lf1.00_lr1.00,0.4425
