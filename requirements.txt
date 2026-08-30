@@ -9,18 +9,20 @@ joblib
 scipy
 PyYAML
 torch
-# Capped below 5.0: jailbreakbench (Chapter 6) requires transformers<5.0, and sentence-transformers'
-# latest release (Chapter 7) would otherwise pull in transformers>=5.0 and silently break Chapter 6.
+# Capped below 5.0: sentence-transformers==3.3.1 (Chapter 7) only works with transformers 4.x
+# despite not officially declaring that, see the pin below.
 transformers>=4.51,<5.0
 accelerate
-jailbreakbench
-# jailbreakbench imports litellm eagerly even though this repo never uses its LLM wrapper classes;
-# newer litellm releases moved a module jailbreakbench still imports directly, breaking `import jailbreakbench`.
-litellm==1.20.0
+# JailbreakBench's own data (Chapters 6, 10, 11) is loaded directly via `datasets` and `requests`
+# rather than through the `jailbreakbench` PyPI package: as of this writing, jailbreakbench
+# releases newer than 0.1.0 require Python <3.12, and 0.1.0 (the only version installable on
+# Python 3.13) ships a stripped-down API and pins an old litellm that fails to import on Python
+# 3.13 regardless (litellm imports the stdlib `imghdr` module, which 3.13 removed outright). No
+# `jailbreakbench` or `litellm` dependency is needed as a result; see each chapter's README.
 tqdm
 requests
 # Pinned to a version that still declares/works with transformers<5.0; sentence-transformers>=4.x
-# requires transformers>=5.0, which would reintroduce the Chapter 6 conflict above.
+# requires transformers>=5.0, which is why transformers is capped below 5.0 above.
 sentence-transformers==3.3.1
 statsmodels
 peft

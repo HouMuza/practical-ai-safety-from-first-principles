@@ -20,10 +20,10 @@ The notebook [`chapter_6_red_teaming_and_jailbreak_evaluation.ipynb`](chapter_6_
 
 ## Why this notebook differs from earlier chapters
 
-Chapters 2-5 needed nothing heavier than `scikit-learn`. This chapter needs an actual language model, `transformers`, `torch`, and the `jailbreakbench` package. Two things worth knowing before you run it:
+Chapters 2-5 needed nothing heavier than `scikit-learn`. This chapter needs an actual language model, `transformers` and `torch`. Two things worth knowing before you run it:
 
 - **It is slow.** A single generation from Qwen3-0.6B took, in testing on Apple Silicon (MPS), anywhere from about 5 seconds to over two minutes depending on how much the model had to say, averaging roughly 70 seconds. The notebook's `N_HARMFUL` / `N_BENIGN` constants default to a small sample (10 and 8 behaviours) so the full run finishes in well under an hour; set them to 100 to reproduce JailbreakBench's full behaviour sets, matching the book's actual research-project design, if you have the time and compute.
-- **`jailbreakbench` needs an older `litellm`.** As of this writing, the latest `litellm` release moved a module that `jailbreakbench` imports directly, which breaks `import jailbreakbench` outright. `requirements.txt` pins `litellm==1.44.27` to work around this. If a future `jailbreakbench` release fixes this, the pin can be relaxed.
+- **JailbreakBench's data is loaded directly, not through the `jailbreakbench` PyPI package.** As of this writing, `jailbreakbench` releases newer than `0.1.0` require Python `<3.12`, and `0.1.0` (the only version that installs on Python 3.13) ships a stripped-down API with no benign split and pins an old `litellm` that fails to import on Python 3.13 regardless (`pkg_resources` was removed from recent `setuptools`, and old `litellm` releases import the stdlib `imghdr` module, which 3.13 removed outright). This notebook instead loads the harmful/benign behaviour sets from JailbreakBench's own underlying Hugging Face dataset (`dedeswim/JBB-Behaviors`) and the PAIR transfer-attack artifact from JailbreakBench's public artifact repository on GitHub, both directly through `datasets` / `requests`, which are dependencies this repo already needs. If you're on Python `<3.12`, the real `jailbreakbench` package works fine and is a drop-in alternative to these two cells.
 
 ## Content handling
 

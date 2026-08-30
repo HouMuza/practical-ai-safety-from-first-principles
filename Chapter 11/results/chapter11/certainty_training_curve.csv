@@ -1,0 +1,4 @@
+epoch,unsupported_certainty_rate,simpleqa_incorrect_confident_rate,simpleqa_not_attempted_rate
+0,0.0,0.0,1.0
+1,1.0,1.0,0.0
+2,1.0,0.76,0.24

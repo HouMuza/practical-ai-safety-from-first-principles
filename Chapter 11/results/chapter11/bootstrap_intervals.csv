@@ -1,0 +1,6 @@
+metric,comparison,ci_low,ci_median,ci_high
+unsupported_certainty_rate,certainty - base,1.0,1.0,1.0
+unsupported_certainty_rate,calibrated - base,0.0,0.0,0.0
+simpleqa_incorrect_confident_rate,certainty - base,0.6,0.76,0.92
+simpleqa_incorrect_confident_rate,calibrated - base,0.0,0.08,0.2
+benign_refusal_rate,certainty - base,0.0,0.0,0.0
