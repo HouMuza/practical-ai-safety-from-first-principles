@@ -1,0 +1,13 @@
+{
+  "n_wmdp_per_domain":30,
+  "n_benign_control":40,
+  "n_arc_train":200,
+  "n_arc_test":80,
+  "n_trials_per_toy_task":3,
+  "n_difficult_oversight_items":12,
+  "models":{
+    "qwen3_0_6b":"Qwen\/Qwen3-0.6B",
+    "qwen3_1_7b":"Qwen\/Qwen3-1.7B",
+    "qwen3_4b":"Qwen\/Qwen3-4B"
+  }
+}

@@ -1,0 +1,4 @@
+policy,student_accuracy
+all_weak_labels,0.075
+filter_low_confidence_quartile,0.0625
+weight_by_confidence,0.1
