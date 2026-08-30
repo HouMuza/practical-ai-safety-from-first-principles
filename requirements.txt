@@ -26,3 +26,4 @@ requests
 sentence-transformers==3.3.1
 statsmodels
 peft
+pydantic

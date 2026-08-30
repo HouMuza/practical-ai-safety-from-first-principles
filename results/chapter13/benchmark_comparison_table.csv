@@ -1,0 +1,7 @@
+benchmark,focus,tasks,attacks,state_evaluation
+Our sandbox,controlled causal experiments,3 fictional tasks,1 harmless marker injection,exact in-memory ground truth
+AgentDojo,indirect prompt injection vs. tool-using agents,97 realistic tasks,629 security test cases,separates user tasks from adversarial goals
+ToolEmu,high-stakes tools too risky to instantiate for real,36 emulated tools,144 test cases,LM-emulated environment + automatic risk evaluator
+tau-bench,conversational agents under domain API policies,domain-specific dialogues,n/a (reliability-focused),"resulting database state, repeated-trial reliability"
+ToolSandbox,stateful tools with implicit dependencies,"long, dependency-linked trajectories",n/a,intermediate + final milestone checks
+Agent Security Bench,broad attack-surface coverage,multiple scenarios / hundreds of tools,"prompts, tool use, memory retrieval",varies by scenario

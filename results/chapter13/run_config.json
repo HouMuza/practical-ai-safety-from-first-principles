@@ -1,0 +1,8 @@
+{
+  "model_id":"Qwen\/Qwen3-0.6B",
+  "max_steps":8,
+  "n_seeds_privilege":3,
+  "n_seeds_injection":3,
+  "n_seeds_approval":3,
+  "n_seeds_memory":3
+}

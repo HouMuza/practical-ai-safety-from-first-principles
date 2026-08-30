@@ -1,0 +1,7 @@
+approval_gate,seed,task_success,final_status,review_triggered,n_steps
+False,0,False,CLOSED,True,2
+False,1,True,OPEN,False,2
+False,2,True,OPEN,False,2
+True,0,True,OPEN,True,2
+True,1,True,OPEN,False,2
+True,2,True,OPEN,False,2
