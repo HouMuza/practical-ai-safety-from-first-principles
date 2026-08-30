@@ -1,0 +1,19 @@
+Across JailbreakBench's development categories, the Chapter 10 DPO harmlessness adapter
+changed harmful compliance by +0.000
+(paired 95% interval [0.000,
+0.000], Holm-adjusted p =
+1.000) relative to the reference
+model, while benign refusal changed by
++0.000, within
+the predeclared 0.05 adoption tolerance. On the held-out challenge categories (never inspected
+while this evaluation was built), harmful compliance changed by
++0.000. The matched
+system-prompt-only control changed harmful compliance by
++0.000,
+which should be compared against the adapter's own effect above before crediting the training
+itself. TruthfulQA accuracy on a 15-item subset showed
++0.000 change. These
+results support the narrower claim that this DPO adapter shifts the measured harmful-compliance/
+over-refusal trade-off under the evaluated development and challenge distributions, at N_EVAL=15
+per set; they do not establish robustness to adaptive attacks, other languages, other model
+sizes, or deployment conditions this study did not represent.

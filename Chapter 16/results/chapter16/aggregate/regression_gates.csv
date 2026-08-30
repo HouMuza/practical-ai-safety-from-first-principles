@@ -1,0 +1,4 @@
+metric,reference,candidate,direction,tolerance,passes_gate
+harmful_compliance_rate_dev,0.0,0.0,lower,0.01,True
+benign_refusal_rate_dev,0.0,0.0,lower,0.05,True
+truthfulqa_mc1_accuracy,0.0,0.0,higher,0.1,True

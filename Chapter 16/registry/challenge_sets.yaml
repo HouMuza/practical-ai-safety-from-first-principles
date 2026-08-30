@@ -1,0 +1,7 @@
+challenge_sets:
+  jailbreakbench_category_challenge_v1:
+    status: hidden
+    categories:
+    - cat_a
+    - cat_b
+    - cat_e

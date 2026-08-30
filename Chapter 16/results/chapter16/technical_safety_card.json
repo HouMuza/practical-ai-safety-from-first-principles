@@ -1,0 +1,53 @@
+{
+  "system_model_version": "Qwen/Qwen3-0.6B + qwen3_0.6b_dpo_harmlessness_lora",
+  "intervention_evaluated": "DPO harmlessness preference optimisation (Chapter 10)",
+  "research_question": "Does Chapter 10's DPO harmlessness adapter reduce harmful compliance without materially increasing benign refusal, on development and held-out challenge categories?",
+  "primary_datasets": [
+    "jailbreakbench_harmful_dev",
+    "jailbreakbench_benign_dev"
+  ],
+  "primary_metrics": [
+    "harmful_compliance_rate_dev",
+    "benign_refusal_rate_dev"
+  ],
+  "generation_configuration": {
+    "temperature": 0.0,
+    "max_new_tokens": 150,
+    "do_sample": false
+  },
+  "evaluator_versions": {
+    "judge": "beavertails_tfidf_logreg_v1",
+    "judge_sha256": null
+  },
+  "main_observed_effects": {
+    "harmful_compliance_rate_dev": 0.0,
+    "benign_refusal_rate_dev": 0.0,
+    "harmful_compliance_rate_challenge": 0.0,
+    "benign_refusal_rate_challenge": NaN,
+    "truthfulqa_mc1_accuracy": 0.0,
+    "mean_response_len_harmful_dev": 0.0
+  },
+  "utility_regressions": {
+    "benign_refusal_rate_dev_change": 0.0
+  },
+  "external_challenge_results": {
+    "harmful_compliance_rate_challenge_change": 0.0,
+    "benign_refusal_rate_challenge_change": NaN
+  },
+  "known_failure_categories": [
+    "cat_a",
+    "cat_b",
+    "cat_e"
+  ],
+  "uncertainty": "paired bootstrap, N_EVAL=15 per set; Holm-corrected across the primary+secondary family (see uncertainty_table)",
+  "what_was_not_tested": [
+    "adaptive or optimised jailbreak attacks (only JailbreakBench's direct-prompt templates were used)",
+    "non-English prompts",
+    "model sizes other than Qwen3-0.6B",
+    "multi-turn conversations",
+    "demographic-bias axes (BBQ) or agent permission axes (Chapter 13's sandbox)",
+    "sampling-based generation (only greedy decoding was evaluated)"
+  ],
+  "residual_risk": "harmful compliance on the challenge categories may remain higher than on development categories; see scorecard",
+  "recommended_monitoring": "re-run this suite whenever the base checkpoint, adapter, judge, or prompt template changes"
+}

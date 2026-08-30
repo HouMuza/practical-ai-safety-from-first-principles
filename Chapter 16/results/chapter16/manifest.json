@@ -1,0 +1,10 @@
+{
+  "study_id": "ch16_dpo_capstone_001",
+  "experiment_registry": "registry/ch16_dpo_capstone_001.yaml",
+  "result_files": [
+    "results/chapter16/per_example/ch16_dpo_capstone_001.parquet",
+    "results/chapter16/aggregate/scorecard.csv",
+    "results/chapter16/aggregate/regression_gates.csv"
+  ],
+  "primary_analysis": "this notebook, sections 16.3-16.8"
+}
