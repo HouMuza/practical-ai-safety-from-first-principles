@@ -1,0 +1,7 @@
+# Limitations
+
+- Evidence class: `blinded_smoke`.
+- SafetyBench measures multiple-choice safety knowledge, not refusal behaviour or deployment safety.
+- Model comparisons are valid only for the frozen matched item set and recorded inference conditions.
+- This is not a confirmatory outcome and must not be presented as final evidence.
+- Accuracy and pairwise outcomes are withheld for this blinded smoke stage.

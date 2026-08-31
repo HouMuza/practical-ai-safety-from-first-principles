@@ -1,0 +1,31 @@
+{
+  "complete_matched_coverage": true,
+  "coverage": {
+    "curriculum_decay": {
+      "completed": 70,
+      "expected": 70,
+      "extra": 0,
+      "missing": 0
+    },
+    "curriculum_sma6": {
+      "completed": 70,
+      "expected": 70,
+      "extra": 0,
+      "missing": 0
+    },
+    "uniform": {
+      "completed": 70,
+      "expected": 70,
+      "extra": 0,
+      "missing": 0
+    }
+  },
+  "evidence_class": "blinded_smoke",
+  "experiment_id": "puro_2b_001_checkpoint_safety",
+  "matched_inference_conditions": true,
+  "metrics": {},
+  "outcomes_withheld": true,
+  "publishable_outcome": false,
+  "reporting_status": "technical_validation",
+  "schema_version": "1.0"
+}

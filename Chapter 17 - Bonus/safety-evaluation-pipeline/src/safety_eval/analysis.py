@@ -142,11 +142,14 @@ def analyze_records(
         _holm(comparisons)
 
     evidence_class = sample["evidence_class"]
-    reporting_status = "confirmatory" if evidence_class == "confirmatory" and comparable else "preliminary" if evidence_class == "pilot" and comparable else "technical_or_incomplete"
+    reporting_status = "confirmatory" if evidence_class == "confirmatory" and comparable else "preliminary" if evidence_class == "pilot" and comparable else "technical_validation" if evidence_class == "blinded_smoke" and comparable else "technical_or_incomplete"
     publishable_outcome = reporting_status == "confirmatory"
+    withhold_outcomes = evidence_class == "blinded_smoke"
+    published_results = {} if withhold_outcomes else dict(results)
+    published_comparisons = [] if withhold_outcomes else comparisons
     output_directory.mkdir(parents=True, exist_ok=True)
-    aggregate = {"schema_version": "1.0", "experiment_id": experiment["experiment_id"], "evidence_class": evidence_class, "reporting_status": reporting_status, "publishable_outcome": publishable_outcome, "complete_matched_coverage": complete, "matched_inference_conditions": matched_conditions, "coverage": coverage, "metrics": dict(results)}
-    paired = {"schema_version": "1.0", "experiment_id": experiment["experiment_id"], "method": {"interval": "paired nonparametric bootstrap", "iterations": bootstrap_iterations, "test": "exact McNemar", "multiplicity": "Holm"}, "comparisons": comparisons}
+    aggregate = {"schema_version": "1.0", "experiment_id": experiment["experiment_id"], "evidence_class": evidence_class, "reporting_status": reporting_status, "publishable_outcome": publishable_outcome, "outcomes_withheld": withhold_outcomes, "complete_matched_coverage": complete, "matched_inference_conditions": matched_conditions, "coverage": coverage, "metrics": published_results}
+    paired = {"schema_version": "1.0", "experiment_id": experiment["experiment_id"], "outcomes_withheld": withhold_outcomes, "method": {"interval": "paired nonparametric bootstrap", "iterations": bootstrap_iterations, "test": "exact McNemar", "multiplicity": "Holm"}, "comparisons": published_comparisons}
     run_manifest = {"schema_version": "1.0", "experiment_id": experiment["experiment_id"], "raw_records": [{"sha256": _sha256(path)} for path in records_paths], "sample": {key: value for key, value in sample.items() if key != "item_ids"}, "models": model_metadata, "malformed_records": malformed, "sanitized": True}
     (output_directory / "aggregate-metrics.json").write_text(json.dumps(aggregate, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (output_directory / "paired-comparisons.json").write_text(json.dumps(paired, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -154,7 +157,7 @@ def analyze_records(
     with (output_directory / "category-results.csv").open("w", newline="", encoding="utf-8") as destination:
         writer = csv.DictWriter(destination, fieldnames=["model", "dimension_type", "dimension", "n", "correct", "accuracy", "ci95_low", "ci95_high"])
         writer.writeheader()
-        for model, model_results in results.items():
+        for model, model_results in published_results.items():
             for metric in model_results.values():
                 writer.writerow({"model": model, "dimension_type": metric["dimension_type"], "dimension": metric["dimension"], "n": metric["n"], "correct": metric["correct"], "accuracy": metric["accuracy"], "ci95_low": metric["ci95_wilson"][0], "ci95_high": metric["ci95_wilson"][1]})
     limitations = ["# Limitations", "", f"- Evidence class: `{evidence_class}`.", "- SafetyBench measures multiple-choice safety knowledge, not refusal behaviour or deployment safety.", "- Model comparisons are valid only for the frozen matched item set and recorded inference conditions."]
@@ -164,10 +167,12 @@ def analyze_records(
         limitations.append("- Inference conditions differ or are missing across models; paired conclusions are withheld.")
     if evidence_class != "confirmatory":
         limitations.append("- This is not a confirmatory outcome and must not be presented as final evidence.")
+    if withhold_outcomes:
+        limitations.append("- Accuracy and pairwise outcomes are withheld for this blinded smoke stage.")
     (output_directory / "limitations.md").write_text("\n".join(limitations) + "\n", encoding="utf-8")
     report_lines = ["# Safety evaluation report", "", f"Status: **{reporting_status.replace('_', ' ')}**", "", f"Frozen sample: {sample['item_count']} items (`{sample['item_ids_sha256'][:12]}`)", "", "| Model | Completed | Missing | Accuracy | 95% CI |", "|---|---:|---:|---:|---:|"]
     for alias in requested_models:
-        overall = results.get(alias, {}).get("overall:all")
+        overall = published_results.get(alias, {}).get("overall:all")
         accuracy = f"{overall['accuracy']:.3f}" if overall else "—"
         interval = f"{overall['ci95_wilson'][0]:.3f}–{overall['ci95_wilson'][1]:.3f}" if overall else "—"
         report_lines.append(f"| {alias} | {coverage[alias]['completed']} | {coverage[alias]['missing']} | {accuracy} | {interval} |")

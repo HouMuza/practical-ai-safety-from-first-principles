@@ -1,0 +1,12 @@
+{
+  "comparisons": [],
+  "experiment_id": "puro_2b_001_checkpoint_safety",
+  "method": {
+    "interval": "paired nonparametric bootstrap",
+    "iterations": 2000,
+    "multiplicity": "Holm",
+    "test": "exact McNemar"
+  },
+  "outcomes_withheld": true,
+  "schema_version": "1.0"
+}

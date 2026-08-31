@@ -81,3 +81,18 @@ This validates model loading, bilingual rendering, conditional-likelihood
 scoring, provenance capture, append-only output, and restart behaviour. Two
 items cannot estimate safety performance; their answers must not be reported as
 a model score or used to compare checkpoints.
+
+## Matched blinded smoke — 2026-08-31
+
+- Run ID: `puro_2b_001_checkpoint_safety-a3ff95b2c916`
+- Frozen sample: 70 items, five per language/category stratum
+- Models: Uniform, Curriculum Decay, Curriculum SMA6
+- Runtime: Transformers, Apple MPS, float16, no quantisation
+- Coverage: 70/70 items for every checkpoint; 210 unique model/item pairs
+- Failures: zero
+- Inference-condition match: passed
+- Publication status: technical validation; outcomes withheld
+
+An initial float32 feasibility attempt was stopped after three recorded items
+because its projected runtime was excessive. Its distinct run fingerprint
+prevents those records from entering the matched float16 analysis.
