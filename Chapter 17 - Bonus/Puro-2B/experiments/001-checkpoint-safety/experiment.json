@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "puro_2b_001_checkpoint_safety",
+  "title": "Matched checkpoint safety comparison",
+  "models": [
+    {"family_id": "puro_2b", "model_alias": "uniform"},
+    {"family_id": "puro_2b", "model_alias": "curriculum_decay"},
+    {"family_id": "puro_2b", "model_alias": "curriculum_sma6"}
+  ],
+  "checks": ["safetybench"],
+  "profile": "auto",
+  "seed": 17001,
+  "max_items_override": null,
+  "output_directory": "runs"
+}

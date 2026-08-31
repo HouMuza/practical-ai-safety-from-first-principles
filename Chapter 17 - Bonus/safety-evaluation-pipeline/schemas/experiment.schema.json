@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appliedaischool.example/schemas/experiment.schema.json",
+  "title": "Safety experiment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "models", "checks", "profile", "seed"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "experiment_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "title": {"type": "string"},
+    "models": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["family_id", "model_alias"]}},
+    "checks": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+    "profile": {"type": "string"},
+    "seed": {"type": "integer", "minimum": 0},
+    "max_items_override": {"type": ["integer", "null"], "minimum": 1},
+    "output_directory": {"type": "string"}
+  }
+}

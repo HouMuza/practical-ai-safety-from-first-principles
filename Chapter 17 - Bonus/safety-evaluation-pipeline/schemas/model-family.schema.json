@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appliedaischool.example/schemas/model-family.schema.json",
+  "title": "Safety evaluation model-family manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_version", "family_id", "display_name", "inventory_date", "models", "comparison_groups"],
+  "properties": {
+    "manifest_version": {"type": "string", "const": "1.0"},
+    "family_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "inventory_date": {"type": "string", "format": "date"},
+    "attribution_path": {"type": "string"},
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["alias", "repository", "revision", "stage", "backend", "weight_file", "weight_sha256", "weight_size_bytes"],
+        "properties": {
+          "alias": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+          "repository": {"type": "string", "minLength": 3},
+          "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "stage": {"enum": ["base", "instruct", "chat", "reasoning", "other"]},
+          "backend": {"enum": ["transformers", "vllm", "mlx", "llama_cpp", "api", "other"]},
+          "weight_file": {"type": "string", "minLength": 1},
+          "weight_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "weight_size_bytes": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "shared_metadata": {"type": "object"},
+    "comparison_groups": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["group_id", "model_aliases", "purpose", "known_confounds"],
+        "properties": {
+          "group_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+          "model_aliases": {"type": "array", "minItems": 2, "items": {"type": "string"}, "uniqueItems": true},
+          "purpose": {"type": "string", "minLength": 1},
+          "known_confounds": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

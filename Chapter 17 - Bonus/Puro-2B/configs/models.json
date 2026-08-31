@@ -1,0 +1,67 @@
+{
+  "manifest_version": "1.0",
+  "family_id": "puro_2b",
+  "display_name": "Puro-2B",
+  "inventory_date": "2026-08-31",
+  "attribution_path": "../ATTRIBUTION.md",
+  "models": [
+    {
+      "alias": "uniform",
+      "repository": "thu-pacman/Puro-2B-Uniform",
+      "revision": "46d9da353060356169438bcb3730c41ebd116216",
+      "stage": "base",
+      "backend": "transformers",
+      "weight_file": "model.safetensors",
+      "weight_sha256": "a6a54f4c1226d36646061880425fa7306183780705fb87202af78cf155389751",
+      "weight_size_bytes": 4063515640
+    },
+    {
+      "alias": "curriculum_decay",
+      "repository": "thu-pacman/Puro-2B-Curriculum-DecayFinal",
+      "revision": "58c8331a3ca1be41051e2d5ae6b0f0678a410b23",
+      "stage": "base",
+      "backend": "transformers",
+      "weight_file": "model.safetensors",
+      "weight_sha256": "e34ddcb338b6e555c7d68d10fb972f56c4124fa4ab96be2a83bb083de6374143",
+      "weight_size_bytes": 4063515640
+    },
+    {
+      "alias": "curriculum_sma6",
+      "repository": "thu-pacman/Puro-2B-Base",
+      "revision": "03c716f6734819b1f953faff726f60722adb8551",
+      "stage": "base",
+      "backend": "transformers",
+      "weight_file": "model.safetensors",
+      "weight_sha256": "85e8b5e0122077d63ad8d4f45c99c913adafe708356ad4303107088a3b44456b",
+      "weight_size_bytes": 4063515640
+    }
+  ],
+  "shared_metadata": {
+    "architecture": "Qwen3ForCausalLM",
+    "parameter_scale": "2B",
+    "weight_dtype": "bfloat16",
+    "hidden_size": 2048,
+    "num_hidden_layers": 28,
+    "num_attention_heads": 16,
+    "num_key_value_heads": 8,
+    "vocab_size": 151936,
+    "max_position_embeddings": 4096,
+    "config_sha256": "9c3c7b4ac5898e5bef8b254671ba0a51dee704ff3c48683e8986bfc94d65db79",
+    "tokenizer_sha256": "f7c9b2dba4a296b1aa76c16a34b8225c0c118978400d4bb66bff0902d702f5b8",
+    "tokenizer_config_sha256": "80d64fccf954f022eb43b7425eb45a133cbb92c76a5f24d4cea6dbe3d45548d9"
+  },
+  "comparison_groups": [
+    {
+      "group_id": "matched_1_4t_endpoints",
+      "model_aliases": ["uniform", "curriculum_decay", "curriculum_sma6"],
+      "purpose": "Compare released Phase 2 endpoints at matched total token and reported compute budgets.",
+      "known_confounds": ["curriculum_sma6 changes both late learning-rate treatment and checkpoint averaging"]
+    },
+    {
+      "group_id": "ordering_contrast",
+      "model_aliases": ["uniform", "curriculum_decay"],
+      "purpose": "Compare uniform global ordering with component-local curriculum under final learning-rate decay.",
+      "known_confounds": ["depends on the release's claim that the target data mixture is held fixed"]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# Downloaded benchmark repositories and generated local datasets.
+*/data/local/
+
+# Raw run records may contain benchmark text and machine-specific paths.
+*/experiments/*/runs/

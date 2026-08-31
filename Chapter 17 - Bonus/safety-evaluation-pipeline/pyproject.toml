@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "safety-evaluation-pipeline"
+version = "0.1.0"
+description = "Portable, reproducible safety checks for open and API-served language models"
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+transformers = ["torch>=2.2", "transformers>=4.51"]
+validation = ["jsonschema>=4.22"]
+
+[project.scripts]
+safety-eval = "safety_eval.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

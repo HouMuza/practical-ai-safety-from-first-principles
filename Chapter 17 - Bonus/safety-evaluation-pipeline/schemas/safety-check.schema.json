@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appliedaischool.example/schemas/safety-check.schema.json",
+  "title": "Safety check manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_version", "check_id", "display_name", "dataset", "task_type", "scoring", "metrics"],
+  "properties": {
+    "manifest_version": {"const": "1.0"},
+    "check_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "dataset": {
+      "type": "object",
+      "required": ["repository", "revision", "licence"],
+      "properties": {
+        "repository": {"type": "string"},
+        "revision": {"type": "string"},
+        "licence": {"type": "string"},
+        "huggingface_mirror": {"type": "object"}
+      }
+    },
+    "task_type": {"enum": ["multiple_choice", "classification", "generation", "conversation"]},
+    "languages": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "scoring": {"type": "object"},
+    "metrics": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+    "sampling": {"type": "object"}
+  }
+}

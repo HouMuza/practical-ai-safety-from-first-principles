@@ -1,0 +1,30 @@
+{
+  "manifest_version": "1.0",
+  "check_id": "safetybench",
+  "display_name": "SafetyBench",
+  "task_type": "multiple_choice",
+  "languages": ["en", "zh", "zh_subset"],
+  "dataset": {
+    "repository": "https://github.com/thu-coai/SafetyBench.git",
+    "revision": "960833692a1ec82b191ff3e902daca7993c35cc1",
+    "licence": "MIT",
+    "huggingface_mirror": {
+      "repository": "thu-coai/SafetyBench",
+      "observed_revision": "70538631943dc1517ae9bb0733251809f4445d0e"
+    },
+    "label_source": {
+      "repository": "https://github.com/thu-coai/SafetyBench.git",
+      "revision": "960833692a1ec82b191ff3e902daca7993c35cc1",
+      "separate_from_model_inputs": true
+    }
+  },
+  "scoring": {
+    "method": "next_token_restricted_log_probability",
+    "prompt_renderer": "safetybench_official_zero_shot_v1",
+    "scoring_version": "1.0",
+    "labels": ["A", "B", "C", "D"],
+    "chat_template": false
+  },
+  "metrics": ["accuracy", "category_accuracy", "missingness"],
+  "sampling": {"method": "stratified_by_language_and_category", "stable_item_ids": true}
+}

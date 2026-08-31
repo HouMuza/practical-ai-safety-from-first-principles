@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appliedaischool.example/schemas/machine.schema.json",
+  "title": "Observed evaluation machine",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "operating_system", "architecture", "cpu_count", "memory_bytes", "accelerators"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "operating_system": {"type": "string"},
+    "architecture": {"type": "string"},
+    "cpu_count": {"type": "integer", "minimum": 1},
+    "memory_bytes": {"type": ["integer", "null"], "minimum": 1},
+    "accelerators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "name", "memory_bytes"],
+        "properties": {
+          "kind": {"enum": ["cuda", "mps", "rocm", "xpu", "tpu", "other"]},
+          "name": {"type": "string"},
+          "memory_bytes": {"type": ["integer", "null"], "minimum": 1}
+        }
+      }
+    }
+  }
+}

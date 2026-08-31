@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "profiles": [
+    {
+      "profile_id": "smoke_cpu",
+      "label": "CPU / low memory smoke test",
+      "run_class": "smoke",
+      "max_items": 20,
+      "batch_size": 1,
+      "precision": "float32",
+      "quantization": "none",
+      "notes": "Validates the pipeline. It is not a benchmark estimate. Prefer a sub-1B model."
+    },
+    {
+      "profile_id": "sampled_accelerator",
+      "label": "Consumer accelerator sample",
+      "run_class": "sampled",
+      "max_items": 250,
+      "batch_size": 1,
+      "precision": "auto",
+      "quantization": "4bit_if_supported",
+      "notes": "Uses a versioned stratified sample and adapts batch size conservatively."
+    },
+    {
+      "profile_id": "full_accelerator",
+      "label": "High-memory accelerator run",
+      "run_class": "full",
+      "max_items": null,
+      "batch_size": 4,
+      "precision": "bfloat16_if_supported",
+      "quantization": "none",
+      "notes": "Runs the full licensed check when model and dataset access allow it."
+    }
+  ]
+}

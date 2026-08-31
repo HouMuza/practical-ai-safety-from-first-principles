@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appliedaischool.example/schemas/execution-profile.schema.json",
+  "title": "Evaluation execution profiles",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profiles"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["profile_id", "label", "run_class", "max_items", "batch_size", "precision", "quantization", "notes"],
+        "properties": {
+          "profile_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+          "label": {"type": "string"},
+          "run_class": {"enum": ["smoke", "sampled", "full"]},
+          "max_items": {"type": ["integer", "null"], "minimum": 1},
+          "batch_size": {"type": "integer", "minimum": 1},
+          "precision": {"type": "string"},
+          "quantization": {"type": "string"},
+          "notes": {"type": "string"}
+        }
+      }
+    }
+  }
+}
