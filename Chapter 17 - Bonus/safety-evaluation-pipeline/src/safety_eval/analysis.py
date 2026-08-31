@@ -40,11 +40,21 @@ def _metric(values: list[bool]) -> dict[str, Any]:
     return {"n": len(values), "correct": correct, "accuracy": correct / len(values) if values else None, "ci95_wilson": [low, high]}
 
 
-def _bootstrap_difference(a: list[bool], b: list[bool], *, seed: int, iterations: int) -> list[float]:
+def _bootstrap_difference(
+    a: list[bool],
+    b: list[bool],
+    *,
+    seed: int,
+    iterations: int,
+    strata: list[str] | None = None,
+) -> list[float]:
     generator = random.Random(seed)
+    groups: dict[str, list[int]] = defaultdict(list)
+    for index, stratum in enumerate(strata or ["all"] * len(a)):
+        groups[stratum].append(index)
     differences = []
     for _ in range(iterations):
-        indices = [generator.randrange(len(a)) for _ in a]
+        indices = [generator.choice(group) for group in groups.values() for _ in group]
         differences.append(sum(a[index] for index in indices) / len(a) - sum(b[index] for index in indices) / len(b))
     differences.sort()
     return [differences[int(0.025 * (iterations - 1))], differences[int(0.975 * (iterations - 1))]]
@@ -58,6 +68,24 @@ def _mcnemar_exact(a: list[bool], b: list[bool]) -> tuple[int, int, float]:
         return a_only, b_only, 1.0
     tail = sum(math.comb(discordant, k) for k in range(min(a_only, b_only) + 1)) / (2**discordant)
     return a_only, b_only, min(1.0, 2 * tail)
+
+
+def _cochran_q(outcomes: list[list[bool]]) -> tuple[float, int, float]:
+    """Return Cochran's Q and its chi-square p-value for two or three models."""
+    model_count = len(outcomes)
+    if model_count not in {2, 3} or len({len(values) for values in outcomes}) != 1:
+        raise ValueError("Cochran's Q implementation requires two or three equally sized paired model vectors")
+    column_totals = [sum(values) for values in outcomes]
+    row_totals = [sum(values[index] for values in outcomes) for index in range(len(outcomes[0]))]
+    denominator = model_count * sum(row_totals) - sum(value * value for value in row_totals)
+    if denominator == 0:
+        return 0.0, model_count - 1, 1.0
+    total = sum(column_totals)
+    statistic = (model_count - 1) * (model_count * sum(value * value for value in column_totals) - total * total) / denominator
+    degrees_of_freedom = model_count - 1
+    # Closed-form chi-square survival functions for the supported df=1 or df=2.
+    p_value = math.erfc(math.sqrt(statistic / 2)) if degrees_of_freedom == 1 else math.exp(-statistic / 2)
+    return statistic, degrees_of_freedom, p_value
 
 
 def _holm(comparisons: list[dict[str, Any]]) -> None:
@@ -133,12 +161,24 @@ def analyze_records(
     matched_conditions = len(condition_signatures) == 1 and len(model_metadata) == len(requested_models)
     comparable = complete and matched_conditions
     comparisons = []
+    omnibus = None
     if comparable:
+        outcome_vectors = {
+            alias: [bool(latest[(alias, item_id)]["output"]["score"]["correct"]) for item_id in expected_ids]
+            for alias in requested_models
+        }
+        q_statistic, q_df, q_p_value = _cochran_q([outcome_vectors[alias] for alias in requested_models])
+        omnibus = {"test": "Cochran Q", "statistic": q_statistic, "degrees_of_freedom": q_df, "p_value": q_p_value}
+        strata = [
+            f'{latest[(requested_models[0], item_id)]["output"]["score"]["language"]}/'
+            f'{latest[(requested_models[0], item_id)]["output"]["score"]["category"]}'
+            for item_id in expected_ids
+        ]
         for index, (left, right) in enumerate(itertools.combinations(requested_models, 2)):
-            left_values = [bool(latest[(left, item_id)]["output"]["score"]["correct"]) for item_id in expected_ids]
-            right_values = [bool(latest[(right, item_id)]["output"]["score"]["correct"]) for item_id in expected_ids]
+            left_values = outcome_vectors[left]
+            right_values = outcome_vectors[right]
             left_only, right_only, p_value = _mcnemar_exact(left_values, right_values)
-            comparisons.append({"model_a": left, "model_b": right, "accuracy_difference_a_minus_b": sum(left_values) / len(left_values) - sum(right_values) / len(right_values), "paired_bootstrap_ci95": _bootstrap_difference(left_values, right_values, seed=experiment["seed"] + index, iterations=bootstrap_iterations), "a_correct_b_wrong": left_only, "a_wrong_b_correct": right_only, "mcnemar_p_value": p_value})
+            comparisons.append({"model_a": left, "model_b": right, "accuracy_difference_a_minus_b": sum(left_values) / len(left_values) - sum(right_values) / len(right_values), "paired_bootstrap_ci95": _bootstrap_difference(left_values, right_values, seed=experiment["seed"] + index, iterations=bootstrap_iterations, strata=strata), "a_correct_b_wrong": left_only, "a_wrong_b_correct": right_only, "mcnemar_p_value": p_value})
         _holm(comparisons)
 
     evidence_class = sample["evidence_class"]
@@ -149,7 +189,7 @@ def analyze_records(
     published_comparisons = [] if withhold_outcomes else comparisons
     output_directory.mkdir(parents=True, exist_ok=True)
     aggregate = {"schema_version": "1.0", "experiment_id": experiment["experiment_id"], "evidence_class": evidence_class, "reporting_status": reporting_status, "publishable_outcome": publishable_outcome, "outcomes_withheld": withhold_outcomes, "complete_matched_coverage": complete, "matched_inference_conditions": matched_conditions, "coverage": coverage, "metrics": published_results}
-    paired = {"schema_version": "1.0", "experiment_id": experiment["experiment_id"], "outcomes_withheld": withhold_outcomes, "method": {"interval": "paired nonparametric bootstrap", "iterations": bootstrap_iterations, "test": "exact McNemar", "multiplicity": "Holm"}, "comparisons": published_comparisons}
+    paired = {"schema_version": "1.0", "experiment_id": experiment["experiment_id"], "outcomes_withheld": withhold_outcomes, "method": {"omnibus_test": "Cochran Q", "interval": "language/category-stratified paired nonparametric bootstrap", "iterations": bootstrap_iterations, "pairwise_test": "exact McNemar", "multiplicity": "Holm"}, "omnibus": None if withhold_outcomes else omnibus, "comparisons": published_comparisons}
     run_manifest = {"schema_version": "1.0", "experiment_id": experiment["experiment_id"], "raw_records": [{"sha256": _sha256(path)} for path in records_paths], "sample": {key: value for key, value in sample.items() if key != "item_ids"}, "models": model_metadata, "malformed_records": malformed, "sanitized": True}
     (output_directory / "aggregate-metrics.json").write_text(json.dumps(aggregate, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (output_directory / "paired-comparisons.json").write_text(json.dumps(paired, indent=2, sort_keys=True) + "\n", encoding="utf-8")

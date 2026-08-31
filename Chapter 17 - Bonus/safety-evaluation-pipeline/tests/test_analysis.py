@@ -50,6 +50,10 @@ class AnalysisTests(unittest.TestCase):
             self.assertTrue(result["complete_matched_coverage"])
             comparison = json.loads((output / "paired-comparisons.json").read_text())["comparisons"][0]
             self.assertIn("mcnemar_p_holm", comparison)
+            paired = json.loads((output / "paired-comparisons.json").read_text())
+            self.assertEqual(paired["omnibus"]["test"], "Cochran Q")
+            self.assertEqual(paired["omnibus"]["degrees_of_freedom"], 1)
+            self.assertIn("stratified", paired["method"]["interval"])
             published = "\n".join(path.read_text() for path in output.iterdir() if path.is_file())
             self.assertNotIn("private benchmark text", published)
             self.assertNotIn('"item_ids"', published)
