@@ -27,3 +27,11 @@ Puro-2B was created by Kairong Luo, Jiarui Cui, Yaorui Yin, Shengqi Chen, Yiming
 Each experiment gets a directory such as `001-checkpoint-safety`. Its README records the research question, hypotheses, models, data, metrics, controls, procedure, analysis plan, status, and conclusions. Experiment-specific outputs stay inside that experiment; reusable code belongs in the chapter-level pipeline.
 
 Do not overwrite raw results. Record exact model revisions, software versions, prompts, seeds, decoding settings, and hardware for every run.
+
+## Active studies
+
+- [`001-checkpoint-safety`](experiments/001-checkpoint-safety/): external
+  SafetyBench baseline, pilot, and confirmatory checkpoint comparison.
+- [`002-safety-boundary-stability`](experiments/002-safety-boundary-stability/):
+  original paired challenge research derived from the book's treatment of
+  distribution shift, calibration, red teaming, controls, and reproducibility.

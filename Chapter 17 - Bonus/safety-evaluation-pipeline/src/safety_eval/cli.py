@@ -54,6 +54,12 @@ def build_parser() -> argparse.ArgumentParser:
     profiles.add_argument("action", choices=("list", "recommend"))
     subcommands.add_parser("models", help="List registered model families.")
     subcommands.add_parser("checks", help="List registered safety checks.")
+    subcommands.add_parser("studies", help="List model-independent studies from the book.")
+    study_plan = subcommands.add_parser("study-plan", help="Report which evidence stages this machine can run.")
+    study_plan.add_argument("study_id")
+    validate_boundary = subcommands.add_parser("validate-boundary-suite", help="Audit a book-derived boundary suite before model inference.")
+    validate_boundary.add_argument("dataset", type=Path)
+    validate_boundary.add_argument("--require-approved", action="store_true", help="Require two-reviewer approval for every item.")
     plan = subcommands.add_parser("plan", help="Resolve an experiment without loading model weights.")
     plan.add_argument("experiment", type=Path)
     plan.add_argument("--profile", default=None)
@@ -108,6 +114,23 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "checks":
         _json(_checks())
         return 0
+    if args.command in {"studies", "study-plan"}:
+        from .studies import load_catalog, plan_study
+
+        if args.command == "studies":
+            catalog = load_catalog()
+            _json([{"study_id": study["study_id"], "chapter": study["chapter"], "title": study["title"], "kind": study["kind"], "interfaces": study["interfaces"]} for study in catalog["studies"]])
+        else:
+            try:
+                _json(plan_study(args.study_id))
+            except ValueError as error:
+                raise SystemExit(str(error)) from error
+        return 0
+    if args.command == "validate-boundary-suite":
+        from .boundary_validation import validate_boundary_suite
+
+        _json(validate_boundary_suite(args.dataset, require_approved=args.require_approved))
+        return 0
     if args.command == "plan":
         if args.max_items is not None and args.max_items < 1:
             raise SystemExit("--max-items must be at least 1")
@@ -117,16 +140,22 @@ def main(argv: list[str] | None = None) -> int:
         if args.max_items < 1:
             raise SystemExit("--max-items must be at least 1")
         plan = resolve_experiment(args.experiment, max_items_override=args.max_items)
-        if len(plan["checks"]) != 1 or plan["checks"][0]["check_id"] != "safetybench":
-            raise SystemExit("The built-in freezer currently supports one SafetyBench check")
+        if len(plan["checks"]) != 1 or plan["checks"][0]["check_id"] not in {"safetybench", "safety_boundary_stability"}:
+            raise SystemExit("The built-in freezer requires one registered multiple-choice check")
         from .adapters.safetybench import SafetyBenchCheck
+        from .adapters.safety_boundary import SafetyBoundaryCheck
         from .sampling import freeze_sample
 
         from .sampling import load_sample
 
         excluded_samples = [load_sample(path) for path in args.exclude_sample]
         excluded_ids = {str(item_id) for sample in excluded_samples for item_id in sample["item_ids"]}
-        check = SafetyBenchCheck(plan["checks"][0], args.dataset, excluded_item_ids=excluded_ids)
+        if plan["checks"][0]["check_id"] == "safetybench":
+            check = SafetyBenchCheck(plan["checks"][0], args.dataset, excluded_item_ids=excluded_ids)
+        else:
+            check = SafetyBoundaryCheck(plan["checks"][0], args.dataset)
+            if excluded_ids:
+                raise SystemExit("Boundary-suite exclusions must be resolved during grouped authoring, before freezing")
         manifest = freeze_sample(check, experiment_id=plan["experiment"]["experiment_id"], seed=plan["experiment"]["seed"], max_items=args.max_items, evidence_class=args.evidence_class, output_path=args.output, excluded_sample_hashes=[sample["item_ids_sha256"] for sample in excluded_samples])
         _json({key: value for key, value in manifest.items() if key != "item_ids"})
         return 0
@@ -159,12 +188,13 @@ def main(argv: list[str] | None = None) -> int:
                 raise SystemExit(f"Check {args.check!r} is not in the experiment") from error
 
         from .adapters.safetybench import SafetyBenchCheck
+        from .adapters.safety_boundary import SafetyBoundaryCheck
         from .adapters.transformers import TransformersAdapter
         from .runner import run_check
 
-        if check_manifest["check_id"] != "safetybench":
+        if check_manifest["check_id"] not in {"safetybench", "safety_boundary_stability"}:
             raise SystemExit(f"No built-in runtime adapter is registered for {check_manifest['check_id']!r}")
-        check = SafetyBenchCheck(check_manifest, args.dataset, frozen_item_ids=frozen_item_ids)
+        check = SafetyBenchCheck(check_manifest, args.dataset, frozen_item_ids=frozen_item_ids) if check_manifest["check_id"] == "safetybench" else SafetyBoundaryCheck(check_manifest, args.dataset, frozen_item_ids=frozen_item_ids)
         model = TransformersAdapter(
             model_spec,
             precision=plan["profile"]["precision"],

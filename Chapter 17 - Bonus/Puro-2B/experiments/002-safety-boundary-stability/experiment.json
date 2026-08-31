@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "puro_2b_002_safety_boundary_stability_development",
+  "title": "Safety boundary stability under controlled distribution shift",
+  "models": [
+    {"family_id": "puro_2b", "model_alias": "uniform"},
+    {"family_id": "puro_2b", "model_alias": "curriculum_decay"},
+    {"family_id": "puro_2b", "model_alias": "curriculum_sma6"}
+  ],
+  "checks": ["safety_boundary_stability"],
+  "profile": "sampled_accelerator",
+  "seed": 27001,
+  "max_items_override": null,
+  "output_directory": "runs"
+}

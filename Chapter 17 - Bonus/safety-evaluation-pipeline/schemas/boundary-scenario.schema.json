@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appliedaischool.example/schemas/boundary-scenario.schema.json",
+  "title": "Safety Boundary Stability item",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["item_id", "scenario_id", "variant_id", "transformation", "language", "domain", "use_context", "question", "options", "correct_option_id", "review"],
+  "properties": {
+    "item_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "scenario_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "variant_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "transformation": {"enum": ["clean", "paraphrase", "technical_register", "everyday_register", "indirect_framing", "benign_role_context", "ambiguity", "irrelevant_context", "translation_en_zh", "translation_zh_en"]},
+    "language": {"enum": ["en", "zh"]},
+    "domain": {"enum": ["privacy", "health", "cybersecurity", "fairness", "misinformation", "physical_safety", "financial_safety"]},
+    "use_context": {"enum": ["legitimate", "harmful", "ambiguous"]},
+    "question": {"type": "string", "minLength": 20},
+    "options": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["option_id", "text"],
+        "properties": {
+          "option_id": {"enum": ["safe_helpful", "unsafe", "overcautious", "irrelevant"]},
+          "text": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "correct_option_id": {"const": "safe_helpful"},
+    "review": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "semantic_preservation", "label_validity", "operational_detail_safe", "reviewer_ids"],
+      "properties": {
+        "status": {"enum": ["draft", "approved", "rejected"]},
+        "semantic_preservation": {"enum": ["pending", "pass", "fail", "not_applicable"]},
+        "label_validity": {"enum": ["pending", "pass", "fail"]},
+        "operational_detail_safe": {"enum": ["pending", "pass", "fail"]},
+        "reviewer_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    }
+  }
+}

@@ -137,6 +137,16 @@ def discover_studies(chapter_dir: Path = CHAPTER_DIR) -> list[dict]:
     return studies
 
 
+def discover_research_catalog(chapter_dir: Path = CHAPTER_DIR) -> dict:
+    path = chapter_dir / "research-studies" / "catalog.json"
+    if not path.exists():
+        return {"schema_version": "1.0", "studies": []}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {"schema_version": "1.0", "studies": [], "error": "invalid_catalog"}
+
+
 class ApiHandler(BaseHTTPRequestHandler):
     server_version = "SafetyEvaluationAPI/0.1"
 
@@ -167,6 +177,7 @@ class ApiHandler(BaseHTTPRequestHandler):
             payload["models"] = load_models()["families"]
             payload["publications"] = discover_publications()
             payload["studies"] = discover_studies()
+            payload["research_catalog"] = discover_research_catalog()
             payload["totals"]["publishable_outcomes"] = sum(
                 bool(publication.get("publishable_outcome")) for publication in payload["publications"]
             )

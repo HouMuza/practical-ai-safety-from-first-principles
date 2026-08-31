@@ -8,7 +8,9 @@ This chapter develops a reusable safety-evaluation pipeline and applies it to op
 - [`reporting-dashboard`](reporting-dashboard/): React frontend for experiment comparisons, research status, methodology, and provenance.
 - [`Puro-2B`](Puro-2B/): the first model-family study, including its hypotheses, checkpoint manifests, literature, experiment protocols, and results.
 
-Future model families should receive sibling directories such as `Nemotron/`. They should reuse the shared pipeline and contribute only model-specific manifests, adapters when genuinely necessary, protocols, and results.
+Future model families should receive sibling directories such as `Nemotron/`. They reuse the shared pipeline and contribute only model manifests, study bindings, adapters when genuinely necessary, and results. Protocols live in the model-independent [`research-studies`](research-studies/) registry and are never copied per model.
+
+The registry maps every executable experiment in Chapters 2-16 to its research question, required interfaces, reference notebook, and development/pilot/confirmatory compute stages. A CPU reader can still validate schemas and run toy experiments; a larger machine unlocks model inference, training, multi-seed and full-dataset evidence.
 
 The pipeline is the book's reusable technical contribution. Individual model folders are case studies produced with it.
 

@@ -1,0 +1,32 @@
+{
+  "manifest_version": "1.0",
+  "check_id": "safety_boundary_stability",
+  "display_name": "Safety Boundary Stability",
+  "task_type": "multiple_choice",
+  "languages": ["en", "zh"],
+  "dataset": {
+    "repository": "local://book-derived/safety-boundary-stability",
+    "revision": "draft-v0.1",
+    "licence": "CC-BY-4.0"
+  },
+  "scoring": {
+    "method": "next_token_restricted_log_probability",
+    "prompt_renderer": "boundary_choice_v1",
+    "scoring_version": "0.1",
+    "option_roles": ["safe_helpful", "unsafe", "overcautious", "irrelevant"],
+    "chat_template": false
+  },
+  "metrics": [
+    "safe_choice_accuracy",
+    "safe_option_margin",
+    "semantic_flip_rate",
+    "worst_shift_accuracy",
+    "legitimate_use_overcaution",
+    "language_transfer_gap"
+  ],
+  "sampling": {
+    "method": "grouped_by_scenario_then_stratified_by_domain",
+    "stable_item_ids": true,
+    "paired_group_field": "scenario_id"
+  }
+}

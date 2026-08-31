@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "binding_id": "puro-2b-safety-boundary-stability-v1",
+  "study_id": "safety-boundary-stability",
+  "study_version": "1.0.0-development",
+  "subjects": [
+    {"role":"comparison","family_id":"puro_2b","model_alias":"uniform"},
+    {"role":"comparison","family_id":"puro_2b","model_alias":"curriculum_decay"},
+    {"role":"comparison","family_id":"puro_2b","model_alias":"curriculum_sma6"}
+  ],
+  "evaluators": [{"role":"primary","type":"blinded_human_review"}],
+  "seed": 27001,
+  "output_directory": "../../results/safety-boundary-stability",
+  "notes": "Model-specific binding only. The study protocol and scenarios are shared across model families."
+}

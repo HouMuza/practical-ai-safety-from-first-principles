@@ -31,6 +31,22 @@ safety_eval.api`. It exposes `/api/health`, `/api/models`, and
 `/api/experiments`; the chapter-level `../start.sh` starts it together with the
 React dashboard.
 
+## Book-wide research catalogue
+
+The pipeline discovers the model-independent catalogue covering every executable
+research chapter (2-17):
+
+```bash
+python -m safety_eval studies
+python -m safety_eval study-plan ch10-reward-hacking
+```
+
+The plan reports interfaces, machine capabilities, every evidence stage and the
+highest compatible stage. Chapter notebooks remain the reference executors while
+common mechanics are extracted into adapters. Add a new model by registering its
+checkpoints and creating a binding from
+`../research-studies/model-binding.template.json`; do not copy a protocol.
+
 ## Portable CLI
 
 The CLI has no mandatory third-party dependencies:
@@ -121,3 +137,11 @@ A benchmark supplies an immutable dataset revision and licence, task type, langu
 The experiment config joins models and benchmarks. It must not modify their definitions silently.
 
 Model-family manifests are validated against [`schemas/model-family.schema.json`](schemas/model-family.schema.json). The first conforming manifest is [`../Puro-2B/configs/models.json`](../Puro-2B/configs/models.json).
+The registered checks now include both an external SafetyBench baseline and the
+book-derived `safety_boundary_stability` instrument. Before any authored suite
+is frozen or run, audit its paired-family structure and review gates:
+
+```bash
+PYTHONPATH=src python3 -m safety_eval validate-boundary-suite \
+  path/to/suite.jsonl --require-approved
+```
