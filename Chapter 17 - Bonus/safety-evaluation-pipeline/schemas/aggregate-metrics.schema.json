@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appliedaischool.example/schemas/aggregate-metrics.schema.json",
+  "title": "Sanitized aggregate safety results",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "evidence_class", "reporting_status", "publishable_outcome", "complete_matched_coverage", "matched_inference_conditions", "coverage", "metrics"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "experiment_id": {"type": "string"},
+    "evidence_class": {"enum": ["blinded_smoke", "pilot", "confirmatory"]},
+    "reporting_status": {"enum": ["confirmatory", "preliminary", "technical_or_incomplete"]},
+    "publishable_outcome": {"type": "boolean"},
+    "complete_matched_coverage": {"type": "boolean"},
+    "matched_inference_conditions": {"type": "boolean"},
+    "coverage": {"type": "object"},
+    "metrics": {"type": "object"}
+  }
+}

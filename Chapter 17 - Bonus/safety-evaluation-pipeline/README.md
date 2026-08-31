@@ -83,6 +83,35 @@ and `answer`; `answer` may be a zero-based index or letter. Optional fields are
 `id`/`item_id`, `language`, and `category`. The adapter generates a stable ID
 when one is absent and samples round-robin across language/category strata.
 
+## Freeze and analyse research samples
+
+Freeze exact item membership before running models:
+
+```bash
+PYTHONPATH=src python3 -m safety_eval freeze-sample EXPERIMENT.json \
+  --dataset /path/to/safetybench.jsonl \
+  --max-items 70 \
+  --evidence-class blinded_smoke \
+  --output samples/blinded-smoke-70.json
+```
+
+Pass that manifest to every matched model with `run --sample-manifest ...`.
+After all models have complete coverage, create a sanitized snapshot:
+
+```bash
+PYTHONPATH=src python3 -m safety_eval analyze \
+  --records runs/RUN_ID/safetybench.jsonl \
+  --experiment EXPERIMENT.json \
+  --sample-manifest samples/SAMPLE.json \
+  --output results/EXPERIMENT_ID
+```
+
+Analysis refuses paired conclusions when coverage is incomplete. It produces
+Wilson intervals, paired bootstrap intervals, exact McNemar tests with Holm
+adjustment, coverage and provenance manifests, CSV aggregates, limitations,
+and a Markdown report. Pilot snapshots are labelled preliminary; only complete
+confirmatory snapshots are marked publishable outcomes.
+
 ## Extension contract
 
 A new model family supplies immutable model revisions and hashes, model stage, loading backend, precision, prompt policy, limits, licence metadata, and valid checkpoint comparison groups.

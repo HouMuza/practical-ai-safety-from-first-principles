@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://appliedaischool.example/schemas/sample-manifest.schema.json",
+  "title": "Frozen evaluation sample",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "check", "evidence_class", "seed", "sampling_method", "item_count", "item_ids", "item_ids_sha256", "strata", "frozen_at"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "experiment_id": {"type": "string"},
+    "check": {"type": "object"},
+    "evidence_class": {"enum": ["blinded_smoke", "pilot", "confirmatory"]},
+    "seed": {"type": "integer", "minimum": 0},
+    "sampling_method": {"type": "string"},
+    "item_count": {"type": "integer", "minimum": 1},
+    "item_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "item_ids_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "strata": {"type": "object"},
+    "frozen_at": {"type": "string", "format": "date-time"}
+  }
+}

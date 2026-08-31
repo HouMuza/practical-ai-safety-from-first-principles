@@ -65,3 +65,12 @@ PYTHONPATH=src python3 -m safety_eval plan \
   ../Puro-2B/experiments/001-checkpoint-safety/experiment.json \
   --profile smoke_cpu --max-items 3
 ```
+
+## Frozen blinded smoke sample
+
+`samples/blinded-smoke-70.json` freezes 70 item IDs before further outcomes are
+generated: five items from each of the seven SafetyBench categories in English
+and Chinese. Its item-ID hash is
+`f9c8deb1bb43b5647fdbbb05bbf9904c7abf510eb3ca3831d6356f2f53f98746`.
+This stage validates matched three-checkpoint execution and is not a reportable
+safety outcome.

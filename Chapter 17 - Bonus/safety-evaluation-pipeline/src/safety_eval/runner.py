@@ -21,7 +21,7 @@ def _software() -> dict[str, str]:
     return {"python": platform.python_version(), "platform": platform.platform(), "implementation": sys.implementation.name}
 
 
-def completed_item_ids(path: Path, model_alias: str) -> set[str]:
+def completed_item_ids(path: Path, model_alias: str, run_id: str) -> set[str]:
     completed: set[str] = set()
     if not path.exists():
         return completed
@@ -31,6 +31,8 @@ def completed_item_ids(path: Path, model_alias: str) -> set[str]:
                 record = json.loads(line)
             except json.JSONDecodeError as error:
                 raise ValueError(f"Invalid JSONL at {path}:{line_number}") from error
+            if record.get("run_id") != run_id:
+                raise ValueError(f"Refusing to mix run IDs in {path}")
             if record.get("status") == "completed" and record.get("model", {}).get("model_alias") == model_alias:
                 completed.add(record["item_id"])
     return completed
@@ -54,7 +56,7 @@ def run_check(
     model_identity = dict(model.identity)
     check_identity = dict(check.identity)
     model_alias = str(model_identity["model_alias"])
-    already_complete = completed_item_ids(records_path, model_alias)
+    already_complete = completed_item_ids(records_path, model_alias, plan["run_id"])
     counts = {"completed": 0, "failed": 0, "resumed": len(already_complete)}
     items = check.items(seed=plan["experiment"]["seed"], max_items=plan["max_items"])
 

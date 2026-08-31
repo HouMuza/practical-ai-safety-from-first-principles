@@ -48,6 +48,14 @@ class SafetyBenchAdapterTests(unittest.TestCase):
             score = check.score(item, {"predicted_index_total": 1})
             self.assertTrue(score["correct"])
 
+    def test_frozen_ids_override_sampling_and_preserve_order(self):
+        with tempfile.TemporaryDirectory() as directory:
+            original = self.make_check(directory)
+            ids = [item["item_id"] for item in original.items(seed=2, max_items=2)]
+            frozen = SafetyBenchCheck(MANIFEST, original.dataset_path, frozen_item_ids=list(reversed(ids)))
+            selected = list(frozen.items(seed=999, max_items=1))
+            self.assertEqual([item["item_id"] for item in selected], list(reversed(ids)))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -53,7 +53,7 @@ def discover_runs(chapter_dir: Path = CHAPTER_DIR) -> dict:
         model = first.get("model", {})
         check = first.get("check", {})
         evidence_class = "technical_smoke" if len(completed) <= 20 else "sampled"
-        publishable_outcome = evidence_class != "technical_smoke"
+        publishable_outcome = False
         runs.append(
             {
                 "run_id": first.get("run_id"),
@@ -84,6 +84,17 @@ def discover_runs(chapter_dir: Path = CHAPTER_DIR) -> dict:
     }
 
 
+def discover_publications(chapter_dir: Path = CHAPTER_DIR) -> list[dict]:
+    publications = []
+    for path in sorted(chapter_dir.glob("*/results/**/aggregate-metrics.json")):
+        try:
+            aggregate = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        publications.append(aggregate)
+    return publications
+
+
 class ApiHandler(BaseHTTPRequestHandler):
     server_version = "SafetyEvaluationAPI/0.1"
 
@@ -112,6 +123,10 @@ class ApiHandler(BaseHTTPRequestHandler):
         if path == "/api/summary":
             payload = discover_runs()
             payload["models"] = load_models()["families"]
+            payload["publications"] = discover_publications()
+            payload["totals"]["publishable_outcomes"] = sum(
+                bool(publication.get("publishable_outcome")) for publication in payload["publications"]
+            )
             self.send_json(200, payload)
             return
         self.send_json(404, {"error": "not_found", "path": path})

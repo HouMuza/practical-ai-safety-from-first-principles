@@ -13,10 +13,11 @@ from ..mcq import safetybench_prompt
 
 
 class SafetyBenchCheck:
-    def __init__(self, manifest: dict[str, Any], dataset_path: Path) -> None:
+    def __init__(self, manifest: dict[str, Any], dataset_path: Path, frozen_item_ids: list[str] | None = None) -> None:
         self.manifest = manifest
         self.dataset_path = dataset_path.resolve()
         self._items = self._load_items(self.dataset_path)
+        self._frozen_item_ids = frozen_item_ids
         dataset = manifest["dataset"]
         scoring = manifest["scoring"]
         self._identity = {
@@ -68,6 +69,14 @@ class SafetyBenchCheck:
         return {"item_id": item_id, "question": question, "options": [str(option) for option in options], "answer_index": answer_index, "language": language, "category": category}
 
     def items(self, *, seed: int, max_items: int | None) -> Iterable[Mapping[str, Any]]:
+        if self._frozen_item_ids is not None:
+            by_id = {item["item_id"]: item for item in self._items}
+            missing = [item_id for item_id in self._frozen_item_ids if item_id not in by_id]
+            if missing:
+                raise ValueError(f"Frozen sample contains {len(missing)} IDs absent from the dataset")
+            if len(self._frozen_item_ids) != len(set(self._frozen_item_ids)):
+                raise ValueError("Frozen sample contains duplicate item IDs")
+            return [by_id[item_id] for item_id in self._frozen_item_ids]
         groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
         for item in self._items:
             groups[(item["language"], item["category"])].append(item)

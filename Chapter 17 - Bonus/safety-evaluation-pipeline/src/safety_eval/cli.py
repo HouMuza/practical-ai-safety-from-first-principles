@@ -58,6 +58,12 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("experiment", type=Path)
     plan.add_argument("--profile", default=None)
     plan.add_argument("--max-items", type=int, default=None)
+    freeze = subcommands.add_parser("freeze-sample", help="Freeze item IDs before inspecting outcomes.")
+    freeze.add_argument("experiment", type=Path)
+    freeze.add_argument("--dataset", required=True, type=Path)
+    freeze.add_argument("--max-items", required=True, type=int)
+    freeze.add_argument("--evidence-class", required=True, choices=("blinded_smoke", "pilot", "confirmatory"))
+    freeze.add_argument("--output", required=True, type=Path)
     run = subcommands.add_parser("run", help="Execute one explicit model/check pair.")
     run.add_argument("experiment", type=Path)
     run.add_argument("--model", required=True, help="Model alias from the experiment manifest.")
@@ -67,6 +73,13 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--max-items", type=int, default=None)
     run.add_argument("--allow-download", action="store_true", help="Allow model/tokenizer downloads when absent locally.")
     run.add_argument("--output", type=Path, default=None, help="Override the append-only JSONL path.")
+    run.add_argument("--sample-manifest", type=Path, default=None, help="Use an exact frozen item-ID set.")
+    analyze = subcommands.add_parser("analyze", help="Create a sanitized aggregate publication snapshot.")
+    analyze.add_argument("--records", required=True, type=Path, action="append", help="JSONL source; repeat for runs from multiple machines.")
+    analyze.add_argument("--experiment", required=True, type=Path)
+    analyze.add_argument("--sample-manifest", required=True, type=Path)
+    analyze.add_argument("--output", required=True, type=Path)
+    analyze.add_argument("--bootstrap-iterations", type=int, default=2000)
     return parser
 
 
@@ -99,10 +112,32 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("--max-items must be at least 1")
         _json(resolve_experiment(args.experiment, profile_override=args.profile, max_items_override=args.max_items))
         return 0
+    if args.command == "freeze-sample":
+        if args.max_items < 1:
+            raise SystemExit("--max-items must be at least 1")
+        plan = resolve_experiment(args.experiment, max_items_override=args.max_items)
+        if len(plan["checks"]) != 1 or plan["checks"][0]["check_id"] != "safetybench":
+            raise SystemExit("The built-in freezer currently supports one SafetyBench check")
+        from .adapters.safetybench import SafetyBenchCheck
+        from .sampling import freeze_sample
+
+        check = SafetyBenchCheck(plan["checks"][0], args.dataset)
+        manifest = freeze_sample(check, experiment_id=plan["experiment"]["experiment_id"], seed=plan["experiment"]["seed"], max_items=args.max_items, evidence_class=args.evidence_class, output_path=args.output)
+        _json({key: value for key, value in manifest.items() if key != "item_ids"})
+        return 0
     if args.command == "run":
         if args.max_items is not None and args.max_items < 1:
             raise SystemExit("--max-items must be at least 1")
+        if args.sample_manifest is not None and args.max_items is not None:
+            raise SystemExit("Use the frozen sample size; do not combine --sample-manifest with --max-items")
         plan = resolve_experiment(args.experiment, profile_override=args.profile, max_items_override=args.max_items)
+        frozen_item_ids = None
+        if args.sample_manifest is not None:
+            from .sampling import attach_sample_to_plan, load_sample
+
+            sample = load_sample(args.sample_manifest)
+            plan = attach_sample_to_plan(plan, sample)
+            frozen_item_ids = [str(item_id) for item_id in sample["item_ids"]]
         try:
             model_spec = next(model for model in plan["models"] if model["alias"] == args.model)
         except StopIteration as error:
@@ -124,7 +159,7 @@ def main(argv: list[str] | None = None) -> int:
 
         if check_manifest["check_id"] != "safetybench":
             raise SystemExit(f"No built-in runtime adapter is registered for {check_manifest['check_id']!r}")
-        check = SafetyBenchCheck(check_manifest, args.dataset)
+        check = SafetyBenchCheck(check_manifest, args.dataset, frozen_item_ids=frozen_item_ids)
         model = TransformersAdapter(
             model_spec,
             precision=plan["profile"]["precision"],
@@ -134,5 +169,12 @@ def main(argv: list[str] | None = None) -> int:
         records_path = args.output or Path(plan["output_directory"]) / plan["run_id"] / f"{check_manifest['check_id']}.jsonl"
         counts = run_check(plan, model, check, records_path=records_path)
         _json({"run_id": plan["run_id"], "records_path": str(records_path), **counts})
+        return 0
+    if args.command == "analyze":
+        if args.bootstrap_iterations < 100:
+            raise SystemExit("--bootstrap-iterations must be at least 100")
+        from .analysis import analyze_records
+
+        _json(analyze_records(args.records, experiment_path=args.experiment, sample_path=args.sample_manifest, output_directory=args.output, bootstrap_iterations=args.bootstrap_iterations))
         return 0
     return 2
