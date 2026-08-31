@@ -34,45 +34,44 @@ def discover_runs(chapter_dir: Path = CHAPTER_DIR) -> dict:
                     malformed += 1
         if not records:
             continue
-        completed = [record for record in records if record.get("status") == "completed"]
-        failed = sum(record.get("status") == "failed" for record in records)
-        languages: Counter[str] = Counter()
-        categories: Counter[str] = Counter()
-        correct = 0
-        scored = 0
-        for record in completed:
-            score = (record.get("output") or {}).get("score") or {}
-            if score.get("language"):
-                languages[str(score["language"])] += 1
-            if score.get("category"):
-                categories[str(score["category"])] += 1
-            if isinstance(score.get("correct"), bool):
-                scored += 1
-                correct += int(score["correct"])
-        first = records[0]
-        model = first.get("model", {})
-        check = first.get("check", {})
-        evidence_class = "technical_smoke" if len(completed) <= 20 else "sampled"
-        publishable_outcome = False
-        runs.append(
-            {
-                "run_id": first.get("run_id"),
-                "experiment_id": first.get("experiment_id"),
-                "model": {key: model.get(key) for key in ("family_id", "model_alias", "revision", "backend", "device", "precision", "quantization")},
-                "check_id": check.get("check_id"),
-                "dataset_revision": check.get("dataset_revision"),
-                "dataset_sha256": check.get("dataset_sha256"),
-                "completed": len(completed),
-                "failed": failed,
-                "malformed": malformed,
-                "languages": dict(sorted(languages.items())),
-                "categories": dict(sorted(categories.items())),
-                "accuracy": correct / scored if scored and publishable_outcome else None,
-                "evidence_class": evidence_class,
-                "publishable_outcome": publishable_outcome,
-                "completed_at": max((record.get("completed_at") or "" for record in records), default=""),
-            }
-        )
+        grouped: dict[tuple[str, str], list[dict]] = {}
+        for record in records:
+            key = (str(record.get("run_id") or path.parent.name), str(record.get("model", {}).get("model_alias") or "unknown"))
+            grouped.setdefault(key, []).append(record)
+        for (_, _), model_records in grouped.items():
+            completed = [record for record in model_records if record.get("status") == "completed"]
+            failed = sum(record.get("status") == "failed" for record in model_records)
+            languages: Counter[str] = Counter()
+            categories: Counter[str] = Counter()
+            for record in completed:
+                score = (record.get("output") or {}).get("score") or {}
+                if score.get("language"):
+                    languages[str(score["language"])] += 1
+                if score.get("category"):
+                    categories[str(score["category"])] += 1
+            first = model_records[0]
+            model = first.get("model", {})
+            check = first.get("check", {})
+            experiment_id = str(first.get("experiment_id") or "")
+            evidence_class = "confirmatory" if "confirmatory" in experiment_id else "pilot" if "pilot" in experiment_id else "technical_validation"
+            runs.append(
+                {
+                    "run_id": first.get("run_id"),
+                    "experiment_id": experiment_id,
+                    "model": {key: model.get(key) for key in ("family_id", "model_alias", "revision", "backend", "device", "precision", "quantization")},
+                    "check_id": check.get("check_id"),
+                    "dataset_revision": check.get("dataset_revision"),
+                    "dataset_sha256": check.get("dataset_sha256"),
+                    "completed": len(completed),
+                    "failed": failed,
+                    "malformed": malformed,
+                    "languages": dict(sorted(languages.items())),
+                    "categories": dict(sorted(categories.items())),
+                    "evidence_class": evidence_class,
+                    "publishable_outcome": False,
+                    "completed_at": max((record.get("completed_at") or "" for record in model_records), default=""),
+                }
+            )
     return {
         "runs": runs,
         "totals": {
@@ -91,8 +90,51 @@ def discover_publications(chapter_dir: Path = CHAPTER_DIR) -> list[dict]:
             aggregate = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             continue
+        comparison_path = path.with_name("paired-comparisons.json")
+        comparison = {}
+        if comparison_path.exists():
+            try:
+                comparison = json.loads(comparison_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                comparison = {}
+        aggregate["analysis"] = {
+            "omnibus": comparison.get("omnibus"),
+            "comparisons": comparison.get("comparisons", []),
+            "method": comparison.get("method", {}),
+        }
         publications.append(aggregate)
     return publications
+
+
+def discover_studies(chapter_dir: Path = CHAPTER_DIR) -> list[dict]:
+    studies = []
+    for path in sorted(chapter_dir.glob("*/experiments/*/*experiment.json")):
+        try:
+            experiment = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        samples = []
+        for sample_path in sorted(path.parent.glob("samples/*.json")):
+            try:
+                sample = json.loads(sample_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                continue
+            if sample.get("experiment_id") != experiment.get("experiment_id"):
+                continue
+            samples.append({key: value for key, value in sample.items() if key != "item_ids"})
+        studies.append(
+            {
+                "experiment_id": experiment.get("experiment_id"),
+                "title": experiment.get("title"),
+                "family_id": (experiment.get("models") or [{}])[0].get("family_id"),
+                "models": [model.get("model_alias") for model in experiment.get("models", [])],
+                "checks": experiment.get("checks", []),
+                "profile": experiment.get("profile"),
+                "seed": experiment.get("seed"),
+                "samples": samples,
+            }
+        )
+    return studies
 
 
 class ApiHandler(BaseHTTPRequestHandler):
@@ -124,6 +166,7 @@ class ApiHandler(BaseHTTPRequestHandler):
             payload = discover_runs()
             payload["models"] = load_models()["families"]
             payload["publications"] = discover_publications()
+            payload["studies"] = discover_studies()
             payload["totals"]["publishable_outcomes"] = sum(
                 bool(publication.get("publishable_outcome")) for publication in payload["publications"]
             )
