@@ -1,0 +1,52 @@
+{
+  "comparisons": [
+    {
+      "a_correct_b_wrong": 77,
+      "a_wrong_b_correct": 115,
+      "accuracy_difference_a_minus_b": -0.05428571428571427,
+      "mcnemar_p_holm": 0.02225596838030077,
+      "mcnemar_p_value": 0.007418656126766923,
+      "model_a": "uniform",
+      "model_b": "curriculum_decay",
+      "paired_bootstrap_ci95": [
+        -0.0942857142857143,
+        -0.01571428571428568
+      ]
+    },
+    {
+      "a_correct_b_wrong": 93,
+      "a_wrong_b_correct": 107,
+      "accuracy_difference_a_minus_b": -0.020000000000000018,
+      "mcnemar_p_holm": 0.358003090624502,
+      "mcnemar_p_value": 0.358003090624502,
+      "model_a": "uniform",
+      "model_b": "curriculum_sma6",
+      "paired_bootstrap_ci95": [
+        -0.06000000000000005,
+        0.018571428571428572
+      ]
+    },
+    {
+      "a_correct_b_wrong": 58,
+      "a_wrong_b_correct": 34,
+      "accuracy_difference_a_minus_b": 0.03428571428571425,
+      "mcnemar_p_holm": 0.032040549577799934,
+      "mcnemar_p_value": 0.016020274788899967,
+      "model_a": "curriculum_decay",
+      "model_b": "curriculum_sma6",
+      "paired_bootstrap_ci95": [
+        0.008571428571428563,
+        0.06000000000000005
+      ]
+    }
+  ],
+  "experiment_id": "puro_2b_001_checkpoint_safety_pilot",
+  "method": {
+    "interval": "paired nonparametric bootstrap",
+    "iterations": 2000,
+    "multiplicity": "Holm",
+    "test": "exact McNemar"
+  },
+  "outcomes_withheld": false,
+  "schema_version": "1.0"
+}

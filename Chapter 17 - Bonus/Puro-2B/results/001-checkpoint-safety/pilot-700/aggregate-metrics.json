@@ -1,0 +1,368 @@
+{
+  "complete_matched_coverage": true,
+  "coverage": {
+    "curriculum_decay": {
+      "completed": 700,
+      "expected": 700,
+      "extra": 0,
+      "missing": 0
+    },
+    "curriculum_sma6": {
+      "completed": 700,
+      "expected": 700,
+      "extra": 0,
+      "missing": 0
+    },
+    "uniform": {
+      "completed": 700,
+      "expected": 700,
+      "extra": 0,
+      "missing": 0
+    }
+  },
+  "evidence_class": "pilot",
+  "experiment_id": "puro_2b_001_checkpoint_safety_pilot",
+  "matched_inference_conditions": true,
+  "metrics": {
+    "curriculum_decay": {
+      "category:Ethics and Morality": {
+        "accuracy": 0.58,
+        "ci95_wilson": [
+          0.4820648670304296,
+          0.6720161732564526
+        ],
+        "correct": 58,
+        "dimension": "Ethics and Morality",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Illegal Activities": {
+        "accuracy": 0.59,
+        "ci95_wilson": [
+          0.4920143005341078,
+          0.6813268697886348
+        ],
+        "correct": 59,
+        "dimension": "Illegal Activities",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Mental Health": {
+        "accuracy": 0.74,
+        "ci95_wilson": [
+          0.6462901055081282,
+          0.8159530153525186
+        ],
+        "correct": 74,
+        "dimension": "Mental Health",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Offensiveness": {
+        "accuracy": 0.53,
+        "ci95_wilson": [
+          0.4328885697009936,
+          0.6248918204065872
+        ],
+        "correct": 53,
+        "dimension": "Offensiveness",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Physical Health": {
+        "accuracy": 0.46,
+        "ci95_wilson": [
+          0.36560808309024106,
+          0.5573513967663177
+        ],
+        "correct": 46,
+        "dimension": "Physical Health",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Privacy and Property": {
+        "accuracy": 0.7,
+        "ci95_wilson": [
+          0.6041514536665332,
+          0.7810511470506724
+        ],
+        "correct": 70,
+        "dimension": "Privacy and Property",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Unfairness and Bias": {
+        "accuracy": 0.59,
+        "ci95_wilson": [
+          0.4920143005341078,
+          0.6813268697886348
+        ],
+        "correct": 59,
+        "dimension": "Unfairness and Bias",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "language:en": {
+        "accuracy": 0.56,
+        "ci95_wilson": [
+          0.5076238487260278,
+          0.6110733783880034
+        ],
+        "correct": 196,
+        "dimension": "en",
+        "dimension_type": "language",
+        "n": 350
+      },
+      "language:zh": {
+        "accuracy": 0.6371428571428571,
+        "ci95_wilson": [
+          0.58553274836973,
+          0.6857751993194837
+        ],
+        "correct": 223,
+        "dimension": "zh",
+        "dimension_type": "language",
+        "n": 350
+      },
+      "overall:all": {
+        "accuracy": 0.5985714285714285,
+        "ci95_wilson": [
+          0.5618157531815678,
+          0.6342511284585429
+        ],
+        "correct": 419,
+        "dimension": "all",
+        "dimension_type": "overall",
+        "n": 700
+      }
+    },
+    "curriculum_sma6": {
+      "category:Ethics and Morality": {
+        "accuracy": 0.52,
+        "ci95_wilson": [
+          0.4231657776522397,
+          0.615354482419481
+        ],
+        "correct": 52,
+        "dimension": "Ethics and Morality",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Illegal Activities": {
+        "accuracy": 0.55,
+        "ci95_wilson": [
+          0.45244602997442135,
+          0.6438546202048803
+        ],
+        "correct": 55,
+        "dimension": "Illegal Activities",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Mental Health": {
+        "accuracy": 0.72,
+        "ci95_wilson": [
+          0.6251197129007884,
+          0.7986031478881379
+        ],
+        "correct": 72,
+        "dimension": "Mental Health",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Offensiveness": {
+        "accuracy": 0.45,
+        "ci95_wilson": [
+          0.3561453797951198,
+          0.5475539700255787
+        ],
+        "correct": 45,
+        "dimension": "Offensiveness",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Physical Health": {
+        "accuracy": 0.48,
+        "ci95_wilson": [
+          0.384645517580519,
+          0.5768342223477603
+        ],
+        "correct": 48,
+        "dimension": "Physical Health",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Privacy and Property": {
+        "accuracy": 0.68,
+        "ci95_wilson": [
+          0.5833738138954762,
+          0.7633085267500092
+        ],
+        "correct": 68,
+        "dimension": "Privacy and Property",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Unfairness and Bias": {
+        "accuracy": 0.55,
+        "ci95_wilson": [
+          0.45244602997442135,
+          0.6438546202048803
+        ],
+        "correct": 55,
+        "dimension": "Unfairness and Bias",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "language:en": {
+        "accuracy": 0.5571428571428572,
+        "ci95_wilson": [
+          0.5047629930333828,
+          0.6082819851704564
+        ],
+        "correct": 195,
+        "dimension": "en",
+        "dimension_type": "language",
+        "n": 350
+      },
+      "language:zh": {
+        "accuracy": 0.5714285714285714,
+        "ci95_wilson": [
+          0.5190845016061657,
+          0.6222217211486331
+        ],
+        "correct": 200,
+        "dimension": "zh",
+        "dimension_type": "language",
+        "n": 350
+      },
+      "overall:all": {
+        "accuracy": 0.5642857142857143,
+        "ci95_wilson": [
+          0.5273011332003379,
+          0.6005685722171257
+        ],
+        "correct": 395,
+        "dimension": "all",
+        "dimension_type": "overall",
+        "n": 700
+      }
+    },
+    "uniform": {
+      "category:Ethics and Morality": {
+        "accuracy": 0.46,
+        "ci95_wilson": [
+          0.36560808309024106,
+          0.5573513967663177
+        ],
+        "correct": 46,
+        "dimension": "Ethics and Morality",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Illegal Activities": {
+        "accuracy": 0.54,
+        "ci95_wilson": [
+          0.44264860323368227,
+          0.6343919169097589
+        ],
+        "correct": 54,
+        "dimension": "Illegal Activities",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Mental Health": {
+        "accuracy": 0.66,
+        "ci95_wilson": [
+          0.5627772885472462,
+          0.7453847920265184
+        ],
+        "correct": 66,
+        "dimension": "Mental Health",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Offensiveness": {
+        "accuracy": 0.44,
+        "ci95_wilson": [
+          0.34672026630160796,
+          0.5377189534832302
+        ],
+        "correct": 44,
+        "dimension": "Offensiveness",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Physical Health": {
+        "accuracy": 0.57,
+        "ci95_wilson": [
+          0.47215389549212305,
+          0.6626670147588988
+        ],
+        "correct": 57,
+        "dimension": "Physical Health",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Privacy and Property": {
+        "accuracy": 0.66,
+        "ci95_wilson": [
+          0.5627772885472462,
+          0.7453847920265184
+        ],
+        "correct": 66,
+        "dimension": "Privacy and Property",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "category:Unfairness and Bias": {
+        "accuracy": 0.48,
+        "ci95_wilson": [
+          0.384645517580519,
+          0.5768342223477603
+        ],
+        "correct": 48,
+        "dimension": "Unfairness and Bias",
+        "dimension_type": "category",
+        "n": 100
+      },
+      "language:en": {
+        "accuracy": 0.5171428571428571,
+        "ci95_wilson": [
+          0.46488992090090797,
+          0.5690235725602438
+        ],
+        "correct": 181,
+        "dimension": "en",
+        "dimension_type": "language",
+        "n": 350
+      },
+      "language:zh": {
+        "accuracy": 0.5714285714285714,
+        "ci95_wilson": [
+          0.5190845016061657,
+          0.6222217211486331
+        ],
+        "correct": 200,
+        "dimension": "zh",
+        "dimension_type": "language",
+        "n": 350
+      },
+      "overall:all": {
+        "accuracy": 0.5442857142857143,
+        "ci95_wilson": [
+          0.5072497703299346,
+          0.5808382489576513
+        ],
+        "correct": 381,
+        "dimension": "all",
+        "dimension_type": "overall",
+        "n": 700
+      }
+    }
+  },
+  "outcomes_withheld": false,
+  "publishable_outcome": false,
+  "reporting_status": "preliminary",
+  "schema_version": "1.0"
+}

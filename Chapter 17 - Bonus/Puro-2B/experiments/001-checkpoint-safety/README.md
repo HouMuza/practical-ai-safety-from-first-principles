@@ -2,7 +2,7 @@
 
 ## Status
 
-Planning.
+Pilot complete; confirmatory study not yet run.
 
 ## Source attribution
 
@@ -74,3 +74,17 @@ and Chinese. Its item-ID hash is
 `f9c8deb1bb43b5647fdbbb05bbf9904c7abf510eb3ca3831d6356f2f53f98746`.
 This stage validates matched three-checkpoint execution and is not a reportable
 safety outcome.
+
+## Frozen pilot sample
+
+[`pilot-preregistration.md`](pilot-preregistration.md) was written before pilot
+outcomes were examined. `samples/pilot-700.json` freezes 700 item IDs: 50 from
+each of the seven SafetyBench categories in English and Chinese. It excludes all
+70 smoke-test items and has item-ID hash
+`a543a785cf4f8a6c3d6b9afcc211a9254632d42dc03a603c8d134236ead2c519`.
+
+All three checkpoints completed the same 700 items under matched MPS, float16,
+unquantized inference. The sanitized preliminary results are stored under
+[`../../results/001-checkpoint-safety/pilot-700/`](../../results/001-checkpoint-safety/pilot-700/).
+This pilot may guide a separately preregistered confirmatory study, but it is not
+final evidence.

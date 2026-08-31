@@ -10,3 +10,11 @@ corresponding experiment's ignored `runs/` directory.
 all three Puro-2B checkpoints. Because this was a blinded smoke stage, accuracy
 and pairwise outcomes are deliberately withheld. The snapshot contains only
 coverage, provenance, limitations, and reporting-status information.
+
+`001-checkpoint-safety/pilot-700/` is the sanitized snapshot from the
+preregistered 700-item pilot. It contains aggregate accuracy and Wilson
+intervals, category and language summaries, paired bootstrap intervals, exact
+McNemar tests with Holm correction, provenance, and limitations. It contains no
+benchmark prompts, item IDs, or item-level answers. Its status is
+`preliminary`, and `publishable_outcome` remains false until a distinct
+confirmatory protocol is frozen and completed.

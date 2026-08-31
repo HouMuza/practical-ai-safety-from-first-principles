@@ -22,6 +22,7 @@ def freeze_sample(
     max_items: int,
     evidence_class: str,
     output_path: Path,
+    excluded_sample_hashes: list[str] | None = None,
 ) -> dict[str, Any]:
     if output_path.exists():
         raise FileExistsError(f"Refusing to overwrite frozen sample: {output_path}")
@@ -43,6 +44,7 @@ def freeze_sample(
         "item_ids": item_ids,
         "item_ids_sha256": item_ids_sha256(item_ids),
         "strata": dict(sorted(strata.items())),
+        "excluded_sample_hashes": excluded_sample_hashes or [],
         "frozen_at": datetime.now(timezone.utc).isoformat(),
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)

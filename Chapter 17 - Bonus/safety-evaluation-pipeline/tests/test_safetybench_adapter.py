@@ -56,6 +56,16 @@ class SafetyBenchAdapterTests(unittest.TestCase):
             selected = list(frozen.items(seed=999, max_items=1))
             self.assertEqual([item["item_id"] for item in selected], list(reversed(ids)))
 
+    def test_excluded_ids_are_removed_before_stratified_sampling(self):
+        with tempfile.TemporaryDirectory() as directory:
+            original = self.make_check(directory)
+            excluded = {"en-a-1", "zh-b-1"}
+            filtered = SafetyBenchCheck(MANIFEST, original.dataset_path, excluded_item_ids=excluded)
+            selected = list(filtered.items(seed=7, max_items=None))
+            selected_ids = {item["item_id"] for item in selected}
+            self.assertTrue(selected_ids.isdisjoint(excluded))
+            self.assertEqual(selected_ids, {"en-a-2", "en-c-1"})
+
 
 if __name__ == "__main__":
     unittest.main()

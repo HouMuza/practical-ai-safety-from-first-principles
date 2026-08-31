@@ -1,0 +1,178 @@
+{
+  "experiment_id": "puro_2b_001_checkpoint_safety_pilot",
+  "malformed_records": 0,
+  "models": {
+    "curriculum_decay": {
+      "environment": {
+        "execution_profile": {
+          "batch_size": 1,
+          "label": "Consumer accelerator sample",
+          "max_items": 250,
+          "notes": "Uses a versioned stratified sample and adapts batch size conservatively.",
+          "precision": "auto",
+          "profile_id": "sampled_accelerator",
+          "quantization": "4bit_if_supported",
+          "run_class": "sampled"
+        },
+        "machine": {
+          "accelerators": [
+            {
+              "kind": "mps",
+              "memory_bytes": null,
+              "name": "Apple Metal Performance Shaders"
+            }
+          ],
+          "architecture": "arm64",
+          "cpu_count": 10,
+          "memory_bytes": 17179869184,
+          "operating_system": "darwin",
+          "schema_version": "1.0"
+        },
+        "software": {
+          "implementation": "cpython",
+          "platform": "macOS-26.5.2-arm64-arm-64bit",
+          "python": "3.11.6"
+        }
+      },
+      "model": {
+        "backend": "transformers",
+        "device": "mps",
+        "family_id": "puro_2b",
+        "model_alias": "curriculum_decay",
+        "precision": "float16",
+        "quantization": "none",
+        "repository": "thu-pacman/Puro-2B-Curriculum-DecayFinal",
+        "revision": "58c8331a3ca1be41051e2d5ae6b0f0678a410b23"
+      }
+    },
+    "curriculum_sma6": {
+      "environment": {
+        "execution_profile": {
+          "batch_size": 1,
+          "label": "Consumer accelerator sample",
+          "max_items": 250,
+          "notes": "Uses a versioned stratified sample and adapts batch size conservatively.",
+          "precision": "auto",
+          "profile_id": "sampled_accelerator",
+          "quantization": "4bit_if_supported",
+          "run_class": "sampled"
+        },
+        "machine": {
+          "accelerators": [
+            {
+              "kind": "mps",
+              "memory_bytes": null,
+              "name": "Apple Metal Performance Shaders"
+            }
+          ],
+          "architecture": "arm64",
+          "cpu_count": 10,
+          "memory_bytes": 17179869184,
+          "operating_system": "darwin",
+          "schema_version": "1.0"
+        },
+        "software": {
+          "implementation": "cpython",
+          "platform": "macOS-26.5.2-arm64-arm-64bit",
+          "python": "3.11.6"
+        }
+      },
+      "model": {
+        "backend": "transformers",
+        "device": "mps",
+        "family_id": "puro_2b",
+        "model_alias": "curriculum_sma6",
+        "precision": "float16",
+        "quantization": "none",
+        "repository": "thu-pacman/Puro-2B-Base",
+        "revision": "03c716f6734819b1f953faff726f60722adb8551"
+      }
+    },
+    "uniform": {
+      "environment": {
+        "execution_profile": {
+          "batch_size": 1,
+          "label": "Consumer accelerator sample",
+          "max_items": 250,
+          "notes": "Uses a versioned stratified sample and adapts batch size conservatively.",
+          "precision": "auto",
+          "profile_id": "sampled_accelerator",
+          "quantization": "4bit_if_supported",
+          "run_class": "sampled"
+        },
+        "machine": {
+          "accelerators": [
+            {
+              "kind": "mps",
+              "memory_bytes": null,
+              "name": "Apple Metal Performance Shaders"
+            }
+          ],
+          "architecture": "arm64",
+          "cpu_count": 10,
+          "memory_bytes": 17179869184,
+          "operating_system": "darwin",
+          "schema_version": "1.0"
+        },
+        "software": {
+          "implementation": "cpython",
+          "platform": "macOS-26.5.2-arm64-arm-64bit",
+          "python": "3.11.6"
+        }
+      },
+      "model": {
+        "backend": "transformers",
+        "device": "mps",
+        "family_id": "puro_2b",
+        "model_alias": "uniform",
+        "precision": "float16",
+        "quantization": "none",
+        "repository": "thu-pacman/Puro-2B-Uniform",
+        "revision": "46d9da353060356169438bcb3730c41ebd116216"
+      }
+    }
+  },
+  "raw_records": [
+    {
+      "sha256": "7cb9ac398489abba58c19c641a300fbd3ce6691cfb6a038b13d3f16c08b20b63"
+    }
+  ],
+  "sample": {
+    "check": {
+      "check_id": "safetybench",
+      "dataset_revision": "960833692a1ec82b191ff3e902daca7993c35cc1",
+      "dataset_sha256": "e4247b102971bb4515e49ebcd5db5c33420b14ccb518baea0f4ae8e7ab9f0e2e",
+      "prompt_version": "safetybench_official_zero_shot_v1",
+      "scoring_version": "1.0"
+    },
+    "evidence_class": "pilot",
+    "excluded_sample_hashes": [
+      "f9c8deb1bb43b5647fdbbb05bbf9904c7abf510eb3ca3831d6356f2f53f98746"
+    ],
+    "experiment_id": "puro_2b_001_checkpoint_safety_pilot",
+    "frozen_at": "2026-08-31T18:37:19.993829+00:00",
+    "item_count": 700,
+    "item_ids_sha256": "a543a785cf4f8a6c3d6b9afcc211a9254632d42dc03a603c8d134236ead2c519",
+    "sampling_method": "deterministic_stratified_round_robin",
+    "schema_version": "1.0",
+    "seed": 17002,
+    "strata": {
+      "en/Ethics and Morality": 50,
+      "en/Illegal Activities": 50,
+      "en/Mental Health": 50,
+      "en/Offensiveness": 50,
+      "en/Physical Health": 50,
+      "en/Privacy and Property": 50,
+      "en/Unfairness and Bias": 50,
+      "zh/Ethics and Morality": 50,
+      "zh/Illegal Activities": 50,
+      "zh/Mental Health": 50,
+      "zh/Offensiveness": 50,
+      "zh/Physical Health": 50,
+      "zh/Privacy and Property": 50,
+      "zh/Unfairness and Bias": 50
+    }
+  },
+  "sanitized": true,
+  "schema_version": "1.0"
+}

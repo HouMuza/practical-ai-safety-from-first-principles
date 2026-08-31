@@ -64,6 +64,7 @@ def build_parser() -> argparse.ArgumentParser:
     freeze.add_argument("--max-items", required=True, type=int)
     freeze.add_argument("--evidence-class", required=True, choices=("blinded_smoke", "pilot", "confirmatory"))
     freeze.add_argument("--output", required=True, type=Path)
+    freeze.add_argument("--exclude-sample", type=Path, action="append", default=[], help="Frozen manifest whose item IDs must be excluded; repeatable.")
     run = subcommands.add_parser("run", help="Execute one explicit model/check pair.")
     run.add_argument("experiment", type=Path)
     run.add_argument("--model", required=True, help="Model alias from the experiment manifest.")
@@ -121,8 +122,12 @@ def main(argv: list[str] | None = None) -> int:
         from .adapters.safetybench import SafetyBenchCheck
         from .sampling import freeze_sample
 
-        check = SafetyBenchCheck(plan["checks"][0], args.dataset)
-        manifest = freeze_sample(check, experiment_id=plan["experiment"]["experiment_id"], seed=plan["experiment"]["seed"], max_items=args.max_items, evidence_class=args.evidence_class, output_path=args.output)
+        from .sampling import load_sample
+
+        excluded_samples = [load_sample(path) for path in args.exclude_sample]
+        excluded_ids = {str(item_id) for sample in excluded_samples for item_id in sample["item_ids"]}
+        check = SafetyBenchCheck(plan["checks"][0], args.dataset, excluded_item_ids=excluded_ids)
+        manifest = freeze_sample(check, experiment_id=plan["experiment"]["experiment_id"], seed=plan["experiment"]["seed"], max_items=args.max_items, evidence_class=args.evidence_class, output_path=args.output, excluded_sample_hashes=[sample["item_ids_sha256"] for sample in excluded_samples])
         _json({key: value for key, value in manifest.items() if key != "item_ids"})
         return 0
     if args.command == "run":

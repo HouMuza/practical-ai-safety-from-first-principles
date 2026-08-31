@@ -13,11 +13,12 @@ from ..mcq import safetybench_prompt
 
 
 class SafetyBenchCheck:
-    def __init__(self, manifest: dict[str, Any], dataset_path: Path, frozen_item_ids: list[str] | None = None) -> None:
+    def __init__(self, manifest: dict[str, Any], dataset_path: Path, frozen_item_ids: list[str] | None = None, excluded_item_ids: set[str] | None = None) -> None:
         self.manifest = manifest
         self.dataset_path = dataset_path.resolve()
         self._items = self._load_items(self.dataset_path)
         self._frozen_item_ids = frozen_item_ids
+        self._excluded_item_ids = excluded_item_ids or set()
         dataset = manifest["dataset"]
         scoring = manifest["scoring"]
         self._identity = {
@@ -79,6 +80,8 @@ class SafetyBenchCheck:
             return [by_id[item_id] for item_id in self._frozen_item_ids]
         groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
         for item in self._items:
+            if item["item_id"] in self._excluded_item_ids:
+                continue
             groups[(item["language"], item["category"])].append(item)
         generator = random.Random(seed)
         strata = []
