@@ -25,6 +25,8 @@ More chapters will be added here as they are written.
 
 ## Getting started
 
+**Using Google Colab:** follow [COLAB.md](COLAB.md). Each notebook mounts Google Drive and saves artefacts under a shared persistent root, including the inputs used by later chapters.
+
 ```bash
 git clone https://github.com/HouMuza/practical-ai-safety-from-first-principles.git
 cd practical-ai-safety-from-first-principles
